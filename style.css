@@ -48,10 +48,11 @@ body {
   left: 2%;
   top: 3%;
   overflow: hidden;
-  border: 3px solid #fff;
+  border: 1px solid #fff;
   border-radius: 6px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-  animation: apparition 0.25s ease-out;
+  transform-origin: 0 0;
+  animation: zoom 0.35s ease-out;
 }
 
 .loupe-image img {
@@ -104,9 +105,38 @@ body {
   color: #666;
 }
 
+.loupe.fermeture .loupe-image {
+  animation: dezoom 0.35s ease-in forwards;
+}
+
+.loupe.fermeture .bulle {
+  animation: disparition 0.2s ease-in forwards;
+}
+
 @keyframes apparition {
   from {
     opacity: 0;
     transform: scale(0.9);
+  }
+}
+
+@keyframes disparition {
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes zoom {
+  from {
+    opacity: 0;
+    transform: var(--depart);
+  }
+}
+
+@keyframes dezoom {
+  to {
+    opacity: 0;
+    transform: var(--depart);
   }
 }

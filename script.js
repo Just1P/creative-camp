@@ -20,6 +20,13 @@ function afficherZone(zone) {
   loupeImage.style.height = height * zoom + '%';
   bulle.style.left = 2 + width * zoom + 2 + '%';
 
+  const decalageX = ((left - 2) / (width * zoom)) * 100;
+  const decalageY = ((top - 3) / (height * zoom)) * 100;
+  loupeImage.style.setProperty(
+    '--depart',
+    `translate(${decalageX}%, ${decalageY}%) scale(${1 / zoom})`
+  );
+
   loupeImg.style.width = (100 / width) * 100 + '%';
   loupeImg.style.height = (100 / height) * 100 + '%';
   loupeImg.style.left = (-left / width) * 100 + '%';
@@ -27,13 +34,32 @@ function afficherZone(zone) {
 
   bulleTitre.textContent = zone.dataset.titre;
   bulleDescription.textContent = zone.dataset.description;
+  loupe.classList.remove('fermeture');
   loupe.hidden = false;
+}
+
+function fermerZone() {
+  if (loupe.hidden || loupe.classList.contains('fermeture')) return;
+  loupe.classList.add('fermeture');
+  loupeImage.addEventListener(
+    'animationend',
+    () => {
+      if (!loupe.classList.contains('fermeture')) return;
+      loupe.classList.remove('fermeture');
+      loupe.hidden = true;
+    },
+    { once: true }
+  );
 }
 
 document.querySelectorAll('.zone').forEach((zone) => {
   zone.addEventListener('click', () => afficherZone(zone));
 });
 
-document.querySelector('.bulle-fermer').addEventListener('click', () => {
-  loupe.hidden = true;
+document.querySelector('.bulle-fermer').addEventListener('click', fermerZone);
+
+document.addEventListener('click', (event) => {
+  if (loupe.hidden) return;
+  if (event.target.closest('.bulle, .zone')) return;
+  fermerZone();
 });
