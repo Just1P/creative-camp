@@ -1,0 +1,112 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+body {
+  display: grid;
+  place-items: center;
+}
+
+.scene {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: min(100vw, 100vh * 16 / 9);
+}
+
+.scene img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.zone {
+  position: absolute;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  outline: 2px solid red;
+}
+
+.loupe {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.loupe[hidden] {
+  display: none;
+}
+
+.loupe-image {
+  position: absolute;
+  left: 2%;
+  top: 3%;
+  overflow: hidden;
+  border: 3px solid #fff;
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  animation: apparition 0.25s ease-out;
+}
+
+.loupe-image img {
+  position: absolute;
+  max-width: none;
+}
+
+.bulle {
+  position: absolute;
+  top: 3%;
+  max-width: 35%;
+  padding: 1em 1.4em;
+  background: #fff;
+  color: #111;
+  font-family: system-ui, sans-serif;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  pointer-events: auto;
+  animation: apparition 0.25s ease-out;
+}
+
+.bulle::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: -12px;
+  border: 12px solid transparent;
+  border-left: 0;
+  border-right-color: #fff;
+}
+
+.bulle-titre {
+  margin: 0 0 0.3em;
+  font-size: 1.2em;
+}
+
+.bulle-description {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.bulle-fermer {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  border: none;
+  background: none;
+  font-size: 1.4em;
+  cursor: pointer;
+  color: #666;
+}
+
+@keyframes apparition {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}

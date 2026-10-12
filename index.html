@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Titre de ma page</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="scene">
+      <img src="public/crime-scene-bg.png" alt="scene de fond" />
+      <button
+        class="zone"
+        style="left: 40%; top: 73%; width: 35%; height: 20%"
+        data-titre="Zone 1"
+        data-description="Description de l'indice trouvé dans la zone 1."
+      ></button>
+      <button
+        class="zone"
+        style="left: 45%; top: 45%; width: 5%; height: 22%"
+        data-titre="Zone 2"
+        data-description="Description de l'indice trouvé dans la zone 2."
+      ></button>
+      <button
+        class="zone"
+        style="left: 82%; top: 34%; width: 11%; height: 20%"
+        data-titre="Zone 3"
+        data-description="Description de l'indice trouvé dans la zone 3."
+      ></button>
+
+      <div class="loupe" hidden>
+        <div class="loupe-image">
+          <img src="public/crime-scene-bg.png" alt="" />
+        </div>
+        <div class="bulle">
+          <button class="bulle-fermer" aria-label="Fermer">×</button>
+          <h2 class="bulle-titre"></h2>
+          <p class="bulle-description"></p>
+        </div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
