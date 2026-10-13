@@ -1,14 +1,14 @@
-const loupe = document.querySelector('.loupe');
-const loupeImage = document.querySelector('.loupe-image');
-const loupeImg = loupeImage.querySelector('img');
-const bulle = document.querySelector('.bulle');
-const bulleTitre = document.querySelector('.bulle-titre');
-const bulleDescription = document.querySelector('.bulle-description');
-
 const progression = document.querySelector('.progression');
 const progressionTexte = document.querySelector('.progression-texte');
 const zones = document.querySelectorAll('.zone');
 const zonesVues = new Set();
+
+const inventaire = document.querySelector('.inventaire');
+const inventaireMessage = document.querySelector('.inventaire-message');
+const cases = inventaire.querySelectorAll('.case');
+const preuvesRecuperees = new Set();
+const DUREE_INVENTAIRE = 2500;
+let fermetureInventaire;
 
 const canvas = progression.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -65,64 +65,40 @@ function majProgression(pourcentage) {
 
 dessinerProgression(0);
 
-const LARGEUR_MAX = 30;
-const HAUTEUR_MAX = 40;
-const ZOOM_MAX = 3;
+// Range la preuve dans la première case libre, puis rentre l'inventaire
+function ajouterPreuve(zone) {
+  if (preuvesRecuperees.has(zone)) return;
+  const caseLibre = [...cases].find((c) => !c.firstElementChild);
+  if (!caseLibre) return;
+  preuvesRecuperees.add(zone);
 
-function afficherZone(zone) {
-  const left = parseFloat(zone.style.left);
-  const top = parseFloat(zone.style.top);
-  const width = parseFloat(zone.style.width);
-  const height = parseFloat(zone.style.height);
+  let item;
+  if (zone.dataset.image) {
+    item = document.createElement('img');
+    item.src = zone.dataset.image;
+    item.alt = zone.dataset.titre;
+  } else {
+    item = document.createElement('span');
+    item.textContent = zone.dataset.titre;
+  }
+  caseLibre.append(item);
+  cases.forEach((c) => c.classList.toggle('nouvelle', c === caseLibre));
 
-  const zoom = Math.min(LARGEUR_MAX / width, HAUTEUR_MAX / height, ZOOM_MAX);
-  loupeImage.style.width = width * zoom + '%';
-  loupeImage.style.height = height * zoom + '%';
-  bulle.style.left = 2 + width * zoom + 2 + '%';
-
-  const decalageX = ((left - 2) / (width * zoom)) * 100;
-  const decalageY = ((top - 3) / (height * zoom)) * 100;
-  loupeImage.style.setProperty(
-    '--depart',
-    `translate(${decalageX}%, ${decalageY}%) scale(${1 / zoom})`,
-  );
-
-  loupeImg.style.width = (100 / width) * 100 + '%';
-  loupeImg.style.height = (100 / height) * 100 + '%';
-  loupeImg.style.left = (-left / width) * 100 + '%';
-  loupeImg.style.top = (-top / height) * 100 + '%';
-
-  bulleTitre.textContent = zone.dataset.titre;
-  bulleDescription.textContent = zone.dataset.description;
-  loupe.classList.remove('fermeture');
-  loupe.hidden = false;
-
-  zonesVues.add(zone);
-  majProgression((zonesVues.size / zones.length) * 100);
+  inventaireMessage.textContent = zone.dataset.preuve;
+  inventaire.classList.add('ouvert');
+  clearTimeout(fermetureInventaire);
+  fermetureInventaire = setTimeout(() => {
+    inventaire.classList.remove('ouvert');
+  }, DUREE_INVENTAIRE);
 }
 
-function fermerZone() {
-  if (loupe.hidden || loupe.classList.contains('fermeture')) return;
-  loupe.classList.add('fermeture');
-  loupeImage.addEventListener(
-    'animationend',
-    () => {
-      if (!loupe.classList.contains('fermeture')) return;
-      loupe.classList.remove('fermeture');
-      loupe.hidden = true;
-    },
-    { once: true },
-  );
+function afficherZone(zone) {
+  zonesVues.add(zone);
+  majProgression((zonesVues.size / zones.length) * 100);
+
+  if (zone.dataset.preuve) ajouterPreuve(zone);
 }
 
 zones.forEach((zone) => {
   zone.addEventListener('click', () => afficherZone(zone));
-});
-
-document.querySelector('.bulle-fermer').addEventListener('click', fermerZone);
-
-document.addEventListener('click', (event) => {
-  if (loupe.hidden) return;
-  if (event.target.closest('.bulle, .zone')) return;
-  fermerZone();
 });

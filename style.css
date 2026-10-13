@@ -12,6 +12,13 @@ body {
   place-items: center;
 }
 
+.inventaire-message,
+.case {
+  --bordure-pixel:
+    0 calc(-1 * var(--epaisseur)) 0 0 var(--bordure), 0 var(--epaisseur) 0 0 var(--bordure),
+    calc(-1 * var(--epaisseur)) 0 0 0 var(--bordure), var(--epaisseur) 0 0 0 var(--bordure);
+}
+
 .scene {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -31,6 +38,12 @@ body {
   border: none;
   cursor: pointer;
   outline: 2px solid red;
+}
+
+/* Encart rattaché à une zone pour couvrir une forme non rectangulaire */
+.zone-extension {
+  position: absolute;
+  outline: inherit;
 }
 
 .progression {
@@ -60,110 +73,77 @@ body {
   line-height: 1;
 }
 
-.loupe {
+.inventaire {
   position: absolute;
-  inset: 0;
+  left: 50%;
+  bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  transform: translate(-50%, calc(100% + 30px));
+  transition: transform 0.4s ease;
   pointer-events: none;
 }
 
-.loupe[hidden] {
-  display: none;
+.inventaire.ouvert {
+  transform: translate(-50%, 0);
 }
 
-.loupe-image {
-  position: absolute;
-  left: 2%;
-  top: 3%;
-  overflow: hidden;
-  border: 1px solid #fff;
-  border-radius: 6px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-  transform-origin: 0 0;
-  animation: zoom 0.45s ease-out;
-}
-
-.loupe-image img {
-  position: absolute;
-  max-width: none;
-}
-
-.bulle {
-  position: absolute;
-  top: 3%;
-  max-width: 35%;
-  padding: 1em 1.4em;
-  background: #fff;
-  color: #111;
-  font-family: system-ui, sans-serif;
-  border-radius: 14px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-  pointer-events: auto;
-  animation: apparition 0.25s ease-out;
-}
-
-.bulle::before {
-  content: '';
-  position: absolute;
-  top: 20px;
-  left: -12px;
-  border: 12px solid transparent;
-  border-left: 0;
-  border-right-color: #fff;
-}
-
-.bulle-titre {
-  margin: 0 0 0.3em;
-  font-size: 1.2em;
-}
-
-.bulle-description {
+.inventaire-message {
   margin: 0;
-  line-height: 1.4;
+  padding: 6px 12px;
+  background: #222;
+  box-shadow: var(--bordure-pixel);
+  --bordure: #515151e5;
+  --epaisseur: 3px;
+  color: #fff;
+  font-family: 'Iceland', sans-serif;
+  font-size: 26px;
 }
 
-.bulle-fermer {
-  position: absolute;
-  top: 4px;
-  right: 8px;
-  border: none;
-  background: none;
-  font-size: 1.4em;
-  cursor: pointer;
-  color: #666;
+.inventaire-cases {
+  display: flex;
+  gap: 20px;
 }
 
-.loupe.fermeture .loupe-image {
-  animation: dezoom 0.35s ease-in forwards;
+.case {
+  box-sizing: border-box;
+  width: 120px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  background: #222;
+  box-shadow: var(--bordure-pixel);
+  --bordure: #5c5c5c;
+  --epaisseur: 4px;
+  transition: box-shadow 0.3s;
 }
 
-.loupe.fermeture .bulle {
-  animation: disparition 0.2s ease-in forwards;
+.case.nouvelle {
+  --bordure: rgb(236, 47, 91);
+}
+
+.case > * {
+  animation: apparition 0.3s ease-out 0.35s backwards;
+}
+
+.case img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+.case span {
+  color: #fff;
+  font-family: 'Iceland', sans-serif;
+  font-size: 18px;
+  text-align: center;
 }
 
 @keyframes apparition {
   from {
     opacity: 0;
     transform: scale(0.9);
-  }
-}
-
-@keyframes disparition {
-  to {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-}
-
-@keyframes zoom {
-  from {
-    opacity: 0;
-    transform: var(--depart);
-  }
-}
-
-@keyframes dezoom {
-  to {
-    opacity: 0;
-    transform: var(--depart);
   }
 }
