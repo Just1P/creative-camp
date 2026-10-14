@@ -300,3 +300,143 @@
     transform: scale(0.9);
   }
 }
+
+/* ---------- Digicode ---------- */
+
+.digicode {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s,
+    visibility 0.25s;
+}
+
+.digicode.ouvert {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Proportions calées sur bg.png (812 x 1232) */
+.digicode-boitier {
+  box-sizing: border-box;
+  height: 86%;
+  aspect-ratio: 812 / 1232;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: url('../assets/images/digicode/bg.png') center / 100% 100% no-repeat;
+  container-type: inline-size;
+  image-rendering: pixelated;
+  position: relative;
+  transform: translateY(20px);
+  transition: transform 0.25s ease-out;
+}
+
+.digicode.ouvert .digicode-boitier {
+  transform: none;
+}
+
+/* Proportions calées sur screen.png (300 x 60) */
+.digicode-ecran {
+  aspect-ratio: 5 / 1;
+  margin: 0 9cqw 7.5cqw;
+  display: grid;
+  place-items: center;
+  background: url('../assets/images/digicode/screen.png') center / 100% 100% no-repeat;
+  color: #7dff9a;
+  font-family: 'Iceland', sans-serif;
+  font-size: 10cqw;
+  line-height: 1;
+  text-shadow: 0 0 2cqw rgba(125, 255, 154, 0.6);
+  white-space: pre;
+}
+
+.digicode-ecran.valide {
+  animation: clignote 0.3s steps(1) 2;
+}
+
+.digicode-ecran.erreur {
+  color: rgb(236, 47, 91);
+  text-shadow: 0 0 2cqw rgba(236, 47, 91, 0.6);
+  animation: tremble 0.3s;
+}
+
+.digicode-touches {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4cqw;
+  margin: 0 9cqw;
+}
+
+.digicode-touche {
+  position: relative;
+  aspect-ratio: 1;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Le 0 au centre de la dernière ligne */
+.digicode-touche:last-child {
+  grid-column: 2;
+}
+
+.digicode-touche img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.digicode-touche-appuyee {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+}
+
+.digicode-touche.appuye .digicode-touche-appuyee {
+  visibility: visible;
+}
+
+.digicode-touche:focus-visible {
+  outline: 3px solid rgb(236, 47, 91);
+}
+
+/* Papier du code posé à droite du boîtier, si l'indice a été récupéré */
+.digicode img.digicode-indice {
+  position: absolute;
+  left: calc(100% + 6cqw);
+  top: 22%;
+  width: 56cqw;
+  height: auto;
+  transform: rotate(6deg);
+}
+
+.digicode-indice[hidden] {
+  display: none;
+}
+
+.digicode.ouvert .digicode-indice {
+  animation: apparition 0.3s ease-out 0.2s backwards;
+}
+
+@keyframes clignote {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes tremble {
+  25% {
+    transform: translateX(-2cqw);
+  }
+  75% {
+    transform: translateX(2cqw);
+  }
+}

@@ -217,7 +217,10 @@ ZONES.forEach((zone) => {
     placer(extension, zone.extension);
     bouton.append(extension);
   }
-  bouton.addEventListener('click', () => afficherZone(zone));
+  bouton.addEventListener('click', () => {
+    if (zone.digicode && !zone.deverrouille) ouvrirDigicode(zone);
+    else afficherZone(zone);
+  });
   decor.append(bouton);
 });
 

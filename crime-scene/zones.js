@@ -52,6 +52,9 @@ const ZONES = [
         'Des [dossiers confidentiels] d’[arrestations d’humains], autorisés et signés par des [réplicants haut placés]',
       type: 'Indice',
     },
+    digicode: '9732',
+    // Zone dont l'indice affiche le code à côté du digicode une fois récupéré
+    indiceDigicode: 'Bonsaï',
     position: { left: 80, top: 52, width: 11, height: 35 },
   },
   {
