@@ -1,23 +1,3 @@
-@font-face {
-  font-family: 'Blade Runner Movie Font';
-  src: url('public/fonts/BladeRunnerMovieFont.ttf') format('truetype');
-  font-display: swap;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  overflow: hidden;
-}
-
-body {
-  display: grid;
-  place-items: center;
-  background: #000;
-}
-
 .scene {
   position: relative;
   flex: none;
@@ -105,6 +85,57 @@ h1::before {
 
 .titles:hover h1 {
   --light-radius: 220px;
+}
+
+/* glitch léger : tranche des lettres décalée, avec la même lumière que le titre */
+h1::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0;
+  pointer-events: none;
+}
+
+h1.is-glitching {
+  animation: title-jitter 0.24s steps(1, end);
+}
+
+h1.is-glitching::after {
+  animation: title-glitch 0.24s steps(1, end);
+}
+
+/* petit sursaut du titre entier (translate se cumule avec le transform de la parallaxe) */
+@keyframes title-jitter {
+  0% {
+    translate: var(--g-jitter, 2px) 0;
+  }
+  35% {
+    translate: calc(var(--g-jitter, 2px) * -1) 0;
+  }
+  70% {
+    translate: 0 0;
+  }
+}
+
+@keyframes title-glitch {
+  0% {
+    opacity: 1;
+    clip-path: inset(var(--g1-top, 30%) 0 var(--g1-bottom, 55%) 0);
+    transform: translateX(var(--g1-x, -10px));
+    filter: brightness(1.5);
+  }
+  35% {
+    opacity: 1;
+    clip-path: inset(var(--g2-top, 60%) 0 var(--g2-bottom, 20%) 0);
+    transform: translateX(var(--g2-x, 8px));
+    filter: brightness(1.3);
+  }
+  70% {
+    opacity: 0;
+  }
 }
 
 .number {
@@ -195,6 +226,7 @@ h1::before {
 }
 
 .menu__btn {
+  position: relative;
   font-family: 'Iceland', sans-serif;
   font-size: 48px;
   color: white;
@@ -210,10 +242,6 @@ h1::before {
     color 0.15s,
     background-size 0.15s ease-out,
     transform 0.15s;
-}
-
-.menu__btn {
-  position: relative;
 }
 
 .menu__btn::before {

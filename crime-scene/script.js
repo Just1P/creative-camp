@@ -1,6 +1,6 @@
+const scene = document.querySelector('.scene');
 const progression = document.querySelector('.progression');
 const progressionTexte = document.querySelector('.progression-texte');
-const zones = document.querySelectorAll('.zone');
 const zonesVues = new Set();
 
 const inventaire = document.querySelector('.inventaire');
@@ -25,6 +25,8 @@ const DUREE_ANIMATION = 600;
 
 let valeurAffichee = 0;
 let animation;
+
+// ---------- Progression ----------
 
 // Dessine l'anneau pixel par pixel pour garder des bords nets une fois agrandi
 function dessinerProgression(pourcentage) {
@@ -66,6 +68,8 @@ function majProgression(pourcentage) {
 }
 
 dessinerProgression(0);
+
+// ---------- Inventaire ----------
 
 // Écrit le message lettre par lettre ; la partie restante est invisible
 // pour que le bloc garde sa taille finale dès le début
@@ -110,32 +114,55 @@ function ajouterPreuve(zone) {
   preuvesRecuperees.add(zone);
 
   let item;
-  if (zone.dataset.image) {
+  if (zone.image) {
     item = document.createElement('img');
-    item.src = zone.dataset.image;
-    item.alt = zone.dataset.titre;
+    item.src = zone.image;
+    item.alt = zone.titre;
   } else {
     item = document.createElement('span');
-    item.textContent = zone.dataset.titre;
+    item.textContent = zone.titre;
   }
   caseLibre.append(item);
   cases.forEach((c) => c.classList.toggle('nouvelle', c === caseLibre));
   return true;
 }
 
+// ---------- Zones ----------
+
 function afficherZone(zone) {
   zonesVues.add(zone);
-  majProgression((zonesVues.size / zones.length) * 100);
+  majProgression((zonesVues.size / ZONES.length) * 100);
 
-  const recuperable = Boolean(zone.dataset.preuve);
+  const recuperable = Boolean(zone.preuve);
   if (recuperable && ajouterPreuve(zone)) {
-    ouvrirInventaire(zone.dataset.preuve, true);
+    ouvrirInventaire(zone.preuve, true);
   } else {
     if (recuperable) cases.forEach((c) => c.classList.remove('nouvelle'));
-    ouvrirInventaire(zone.dataset.description, recuperable);
+    ouvrirInventaire(zone.description, recuperable);
   }
 }
 
-zones.forEach((zone) => {
-  zone.addEventListener('click', () => afficherZone(zone));
+function placer(element, { left, top, width, height }) {
+  Object.assign(element.style, {
+    left: left + '%',
+    top: top + '%',
+    width: width + '%',
+    height: height + '%',
+  });
+}
+
+// Crée un bouton par zone, sous la progression et l'inventaire
+ZONES.forEach((zone) => {
+  const bouton = document.createElement('button');
+  bouton.className = 'zone';
+  bouton.setAttribute('aria-label', zone.titre);
+  placer(bouton, zone.position);
+  if (zone.extension) {
+    const extension = document.createElement('span');
+    extension.className = 'zone-extension';
+    placer(extension, zone.extension);
+    bouton.append(extension);
+  }
+  bouton.addEventListener('click', () => afficherZone(zone));
+  scene.insertBefore(bouton, progression);
 });

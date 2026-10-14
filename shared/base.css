@@ -1,0 +1,21 @@
+/* Styles communs à toutes les pages du jeu */
+
+@font-face {
+  font-family: 'Blade Runner Movie Font';
+  src: url('../assets/fonts/blade-runner.ttf') format('truetype');
+  font-display: swap;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+body {
+  display: grid;
+  place-items: center;
+}
