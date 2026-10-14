@@ -1,78 +1,59 @@
 const scene = document.querySelector('.scene');
-const progression = document.querySelector('.progression');
-const progressionTexte = document.querySelector('.progression-texte');
+const decor = document.querySelector('.decor');
+const listeObjectifs = document.querySelector('.objectifs-liste');
 const zonesVues = new Set();
 
 const inventaire = document.querySelector('.inventaire');
 const inventaireMessage = document.querySelector('.inventaire-message');
 const cases = inventaire.querySelectorAll('.case');
+const boutonInventaire = document.querySelector('.inventaire-bouton');
+const zoneCases = inventaire.querySelector('.inventaire-cases');
 const preuvesRecuperees = new Set();
 const DUREE_INVENTAIRE = 2500;
 const DELAI_LETTRE = 30;
 let fermetureInventaire;
 let ecriture;
+let fermetureEnAttente = false;
 
-const canvas = progression.querySelector('canvas');
-const ctx = canvas.getContext('2d');
-const TAILLE = canvas.width;
-const RAYON_EXT = TAILLE / 2 - 1;
-const RAYON_INT = RAYON_EXT - 6;
-const RAYON_EXT_FOND = RAYON_EXT - 2;
-const RAYON_INT_FOND = RAYON_INT - 2;
-const COULEUR_BARRE = [236, 47, 91, 255];
-const COULEUR_FOND = [255, 255, 255, 20];
-const DUREE_ANIMATION = 600;
+// ---------- Objectifs ----------
 
-let valeurAffichee = 0;
-let animation;
+const OBJECTIFS = [
+  {
+    nom: 'Indices',
+    total: ZONES.filter((zone) => zone.preuve).length,
+    compte: () => preuvesRecuperees.size,
+  },
+  {
+    nom: 'Zones inspectées',
+    total: ZONES.length,
+    compte: () => zonesVues.size,
+  },
+];
 
-// ---------- Progression ----------
+function majObjectifs() {
+  listeObjectifs.replaceChildren(
+    ...OBJECTIFS.map((objectif) => {
+      const compte = objectif.compte();
+      const ligne = document.createElement('li');
+      ligne.className = 'objectif';
+      ligne.classList.toggle('termine', compte >= objectif.total);
 
-// Dessine l'anneau pixel par pixel pour garder des bords nets une fois agrandi
-function dessinerProgression(pourcentage) {
-  const image = ctx.createImageData(TAILLE, TAILLE);
-  const centre = TAILLE / 2;
-  for (let y = 0; y < TAILLE; y++) {
-    for (let x = 0; x < TAILLE; x++) {
-      const dx = x + 0.5 - centre;
-      const dy = y + 0.5 - centre;
-      const distance = Math.hypot(dx, dy);
-      if (distance > RAYON_EXT || distance < RAYON_INT) continue;
-      // Angle de 0 à 100, en partant du haut dans le sens horaire
-      const angle = ((Math.atan2(dx, -dy) / (2 * Math.PI)) * 100 + 100) % 100;
-      if (angle < pourcentage) {
-        image.data.set(COULEUR_BARRE, (y * TAILLE + x) * 4);
-      } else if (distance <= RAYON_EXT_FOND && distance >= RAYON_INT_FOND) {
-        image.data.set(COULEUR_FOND, (y * TAILLE + x) * 4);
-      }
-    }
-  }
-  ctx.putImageData(image, 0, 0);
+      const nom = document.createElement('span');
+      nom.textContent = objectif.nom;
+      const valeur = document.createElement('span');
+      valeur.className = 'objectif-compte';
+      valeur.textContent = compte + '/' + objectif.total;
+
+      ligne.append(nom, valeur);
+      return ligne;
+    }),
+  );
 }
 
-function majProgression(pourcentage) {
-  const valeur = Math.round(Math.max(0, Math.min(100, pourcentage)));
-  progression.setAttribute('aria-valuenow', valeur);
-  progressionTexte.textContent = valeur + '%';
-
-  const depart = valeurAffichee;
-  const debut = performance.now();
-  cancelAnimationFrame(animation);
-  const etape = (maintenant) => {
-    const t = Math.min(1, (maintenant - debut) / DUREE_ANIMATION);
-    valeurAffichee = depart + (valeur - depart) * (1 - (1 - t) ** 3);
-    dessinerProgression(valeurAffichee);
-    if (t < 1) animation = requestAnimationFrame(etape);
-  };
-  animation = requestAnimationFrame(etape);
-}
-
-dessinerProgression(0);
+majObjectifs();
 
 // ---------- Inventaire ----------
 
-// Écrit le message lettre par lettre ; la partie restante est invisible
-// pour que le bloc garde sa taille finale dès le début
 function ecrireMessage(message, finie) {
   const ecrit = document.createElement('span');
   const reste = document.createElement('span');
@@ -96,22 +77,96 @@ function ecrireMessage(message, finie) {
 }
 
 function ouvrirInventaire(message, avecCases) {
+  inventaire.classList.remove('sans-message', 'manuel', 'recuperation');
   inventaire.classList.toggle('sans-cases', !avecCases);
   inventaire.classList.add('ouvert');
   clearTimeout(fermetureInventaire);
+  fermetureEnAttente = false;
   ecrireMessage(message, () => {
-    fermetureInventaire = setTimeout(() => {
-      inventaire.classList.remove('ouvert');
-    }, DUREE_INVENTAIRE);
+    fermetureInventaire = setTimeout(fermerInventaireAuto, DUREE_INVENTAIRE);
   });
 }
 
-// Range la preuve dans la première case libre
+function fermerInventaire() {
+  fermetureEnAttente = false;
+  inventaire.classList.remove('ouvert', 'manuel', 'recuperation');
+}
+
+// Fermeture automatique repoussée tant que la souris est sur les cases
+function fermerInventaireAuto() {
+  if (!inventaire.classList.contains('sans-cases') && zoneCases.matches(':hover')) {
+    fermetureEnAttente = true;
+    return;
+  }
+  fermerInventaire();
+}
+
+zoneCases.addEventListener('mouseleave', () => {
+  if (fermetureEnAttente) fermerInventaire();
+});
+
+const observateurInventaire = new MutationObserver(() => {
+  const ouvert = inventaire.classList.contains('ouvert') && !inventaire.classList.contains('sans-cases');
+  boutonInventaire.setAttribute('aria-label', ouvert ? "Fermer l'inventaire" : "Ouvrir l'inventaire");
+});
+observateurInventaire.observe(inventaire, { attributes: true, attributeFilter: ['class'] });
+
+// Le bouton ouvre (seulement les cases, jusqu'au prochain clic ailleurs) ou referme l'inventaire
+boutonInventaire.addEventListener('click', () => {
+  clearTimeout(fermetureInventaire);
+  clearInterval(ecriture);
+  if (inventaire.classList.contains('ouvert') && !inventaire.classList.contains('sans-cases')) {
+    fermerInventaire();
+    return;
+  }
+  cases.forEach((c) => c.classList.remove('nouvelle'));
+  inventaire.classList.remove('sans-cases');
+  inventaire.classList.add('ouvert', 'manuel', 'sans-message');
+});
+
+document.addEventListener('click', (e) => {
+  if (!inventaire.classList.contains('manuel')) return;
+  if (e.target.closest('.inventaire')) return;
+  fermerInventaire();
+});
+
+// Encart affiché au survol d'un objet de l'inventaire
+function creerFiche(zone) {
+  const objet = zone.objet || {};
+  const fiche = document.createElement('div');
+  fiche.className = 'fiche';
+
+  const nom = document.createElement('p');
+  nom.className = 'fiche-nom';
+  nom.textContent = objet.nom || zone.titre;
+
+  const texte = document.createElement('p');
+  texte.className = 'fiche-texte';
+  const description = objet.description || zone.preuve || zone.description;
+  description.split(/\[(.*?)\]/).forEach((morceau, i) => {
+    if (i % 2 === 0) {
+      texte.append(morceau);
+    } else {
+      const mot = document.createElement('span');
+      mot.textContent = morceau;
+      texte.append(mot);
+    }
+  });
+
+  const type = document.createElement('p');
+  type.className = 'fiche-type';
+  type.textContent = objet.type || 'Indice';
+
+  fiche.append(nom, texte, type);
+  return fiche;
+}
+
 function ajouterPreuve(zone) {
   if (preuvesRecuperees.has(zone)) return false;
   const caseLibre = [...cases].find((c) => !c.firstElementChild);
   if (!caseLibre) return false;
   preuvesRecuperees.add(zone);
+  inventaire.classList.remove('vide');
 
   let item;
   if (zone.image) {
@@ -122,7 +177,7 @@ function ajouterPreuve(zone) {
     item = document.createElement('span');
     item.textContent = zone.titre;
   }
-  caseLibre.append(item);
+  caseLibre.append(item, creerFiche(zone));
   cases.forEach((c) => c.classList.toggle('nouvelle', c === caseLibre));
   return true;
 }
@@ -131,15 +186,15 @@ function ajouterPreuve(zone) {
 
 function afficherZone(zone) {
   zonesVues.add(zone);
-  majProgression((zonesVues.size / ZONES.length) * 100);
 
   const recuperable = Boolean(zone.preuve);
   if (recuperable && ajouterPreuve(zone)) {
     ouvrirInventaire(zone.preuve, true);
+    inventaire.classList.add('recuperation');
   } else {
-    if (recuperable) cases.forEach((c) => c.classList.remove('nouvelle'));
-    ouvrirInventaire(zone.description, recuperable);
+    ouvrirInventaire(zone.description, false);
   }
+  majObjectifs();
 }
 
 function placer(element, { left, top, width, height }) {
@@ -151,7 +206,6 @@ function placer(element, { left, top, width, height }) {
   });
 }
 
-// Crée un bouton par zone, sous la progression et l'inventaire
 ZONES.forEach((zone) => {
   const bouton = document.createElement('button');
   bouton.className = 'zone';
@@ -164,5 +218,26 @@ ZONES.forEach((zone) => {
     bouton.append(extension);
   }
   bouton.addEventListener('click', () => afficherZone(zone));
-  scene.insertBefore(bouton, progression);
+  decor.append(bouton);
 });
+
+// ---------- Parallaxe ----------
+
+let cibleX = 0,
+  cibleY = 0,
+  actuelX = 0,
+  actuelY = 0;
+
+document.addEventListener('mousemove', (e) => {
+  cibleX = -(e.clientX / window.innerWidth - 0.5) * 2;
+  cibleY = -(e.clientY / window.innerHeight - 0.5) * 2;
+});
+
+function animerDecor() {
+  actuelX += (cibleX - actuelX) * 0.05;
+  actuelY += (cibleY - actuelY) * 0.05;
+  scene.style.setProperty('--mx', actuelX.toFixed(4));
+  scene.style.setProperty('--my', actuelY.toFixed(4));
+  requestAnimationFrame(animerDecor);
+}
+animerDecor();

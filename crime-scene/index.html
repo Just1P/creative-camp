@@ -12,19 +12,20 @@
   </head>
   <body>
     <div class="scene">
-      <img src="../assets/images/scene-de-crime.png" alt="scene de fond" draggable="false" />
-      <div
-        class="progression"
-        role="progressbar"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-valuenow="0"
-      >
-        <canvas width="50" height="50" aria-hidden="true"></canvas>
-        <span class="progression-texte">0%</span>
+      <div class="decor">
+        <img src="../assets/images/scene-de-crime.png" alt="scene de fond" draggable="false" />
       </div>
+      <section class="objectifs" aria-label="Objectifs">
+        <h2 class="objectifs-titre">Objectifs</h2>
+        <ul class="objectifs-liste"></ul>
+      </section>
 
-      <div class="inventaire">
+      <div class="inventaire vide">
+        <button class="inventaire-bouton" type="button" aria-label="Ouvrir l'inventaire">
+          <svg viewBox="0 0 7 4" aria-hidden="true">
+            <path d="M3 0h1v1h1v1h1v1h1v1H5V3H4V2H3v1H2v1H0V3h1V2h1V1h1z" fill-rule="evenodd" />
+          </svg>
+        </button>
         <p class="inventaire-message" role="status"></p>
         <div class="inventaire-cases">
           <div class="case"></div>

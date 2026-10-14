@@ -1,5 +1,10 @@
+.objectifs,
 .inventaire-message,
-.case {
+.case,
+.inventaire-bouton,
+.fiche,
+.fiche-texte,
+.fiche-type {
   --bordure-pixel:
     0 calc(-1 * var(--epaisseur)) 0 0 var(--bordure), 0 var(--epaisseur) 0 0 var(--bordure),
     calc(-1 * var(--epaisseur)) 0 0 0 var(--bordure), var(--epaisseur) 0 0 0 var(--bordure);
@@ -9,6 +14,16 @@
   position: relative;
   aspect-ratio: 16 / 9;
   width: min(100vw, 100vh * 16 / 9);
+  overflow: hidden;
+}
+
+.decor {
+  position: absolute;
+  inset: 0;
+  --parallax: 16px;
+  transform: translate(calc(var(--mx, 0) * var(--parallax)), calc(var(--my, 0) * var(--parallax)))
+    scale(1.03);
+  will-change: transform;
 }
 
 .scene img {
@@ -26,37 +41,57 @@
   outline: 2px solid red;
 }
 
-/* Encart rattaché à une zone pour couvrir une forme non rectangulaire */
 .zone-extension {
   position: absolute;
   outline: inherit;
 }
 
-.progression {
+.objectifs {
   position: absolute;
-  left: 3%;
-  top: 3%;
-  width: 180px;
-  height: 180px;
-  display: grid;
-  place-items: center;
+  right: 1%;
+  top: 4%;
+  width: 140px;
+  padding: 10px 14px 12px;
+  background: rgba(10, 10, 12, 0.85);
+  box-shadow: var(--bordure-pixel);
+  --bordure: #5c5c5c;
+  --epaisseur: 3px;
+  color: #fff;
+  font-family: 'Iceland', sans-serif;
   pointer-events: none;
 }
 
-.progression canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  image-rendering: pixelated;
+.objectifs-titre {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: normal;
+  line-height: 1;
 }
 
-.progression-texte {
-  position: relative;
-  color: #fff;
-  font-family: 'Iceland', sans-serif;
-  font-size: 48px;
-  line-height: 1;
+.objectifs-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 20px;
+  line-height: 1.1;
+}
+
+/* Nom au-dessus du compteur */
+.objectif {
+  display: flex;
+  flex-direction: column;
+}
+
+.objectif-compte {
+  color: #aaa;
+  font-size: 28px;
+}
+
+.objectif.termine .objectif-compte {
+  color: rgb(236, 47, 91);
 }
 
 .inventaire {
@@ -67,13 +102,16 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  transform: translate(-50%, calc(100% + 30px));
+  /* Fermé : seul le bouton dépasse, à 20px du bas */
+  transform: translate(-50%, calc(100% - 10px));
   transition: transform 0.4s ease;
   pointer-events: none;
 }
 
+/* Ouvert : bloque les clics sur les zones situées derrière */
 .inventaire.ouvert {
   transform: translate(-50%, 0);
+  pointer-events: auto;
 }
 
 .inventaire-message {
@@ -87,6 +125,54 @@
   font-family: 'Iceland', sans-serif;
   font-size: 26px;
   white-space: nowrap;
+}
+
+.inventaire.sans-message .inventaire-message {
+  display: none;
+}
+
+.inventaire-bouton {
+  width: 48px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: #222;
+  box-shadow: var(--bordure-pixel);
+  --bordure: #5c5c5c;
+  --epaisseur: 3px;
+  margin-bottom: 10px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    box-shadow 0.3s,
+    opacity 0.3s;
+}
+
+/* Pas de bouton tant qu'aucun objet n'a été récupéré, ni pendant l'affichage d'une récupération */
+.inventaire.vide .inventaire-bouton,
+.inventaire.recuperation .inventaire-bouton {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.inventaire-bouton:hover,
+.inventaire-bouton:focus-visible {
+  --bordure: rgb(236, 47, 91);
+  outline: none;
+}
+
+.inventaire-bouton svg {
+  width: 16px;
+  height: 10px;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+}
+
+.inventaire.ouvert:not(.sans-cases) .inventaire-bouton svg {
+  transform: rotate(180deg);
 }
 
 .inventaire-message-reste {
@@ -112,14 +198,16 @@
   box-shadow: var(--bordure-pixel);
   --bordure: #5c5c5c;
   --epaisseur: 4px;
+  position: relative;
   transition: box-shadow 0.3s;
 }
 
-.case.nouvelle {
+.case.nouvelle,
+.case:has(.fiche):hover {
   --bordure: rgb(236, 47, 91);
 }
 
-.case > * {
+.case > :not(.fiche) {
   animation: apparition 0.3s ease-out 0.35s backwards;
 }
 
@@ -129,11 +217,81 @@
   object-fit: contain;
 }
 
-.case span {
+.case > span {
   color: #fff;
   font-family: 'Iceland', sans-serif;
   font-size: 18px;
   text-align: center;
+}
+
+/* ---------- Fiche d'un objet ---------- */
+
+.fiche {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 18px);
+  z-index: 1;
+  box-sizing: border-box;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 14px;
+  background: rgba(10, 10, 12, 0.92);
+  box-shadow: var(--bordure-pixel);
+  --bordure: #5c5c5c;
+  --epaisseur: 4px;
+  color: #fff;
+  font-family: 'Iceland', sans-serif;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 6px);
+  transition:
+    opacity 0.2s,
+    transform 0.2s,
+    visibility 0.2s;
+}
+
+.case:hover .fiche {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+.fiche p {
+  margin: 0;
+}
+
+.fiche-nom {
+  font-size: 30px;
+  line-height: 1;
+}
+
+.fiche-texte {
+  padding: 6px 10px;
+  background: #fff;
+  box-shadow: var(--bordure-pixel);
+  --bordure: #fff;
+  --epaisseur: 3px;
+  color: #111;
+  font-size: 15px;
+  line-height: 1.2;
+}
+
+.fiche-texte span {
+  color: rgb(236, 47, 91);
+}
+
+.fiche-type {
+  padding: 1px 10px;
+  background: rgb(236, 47, 91);
+  box-shadow: var(--bordure-pixel);
+  --bordure: rgb(236, 47, 91);
+  --epaisseur: 3px;
+  font-size: 19px;
 }
 
 @keyframes apparition {

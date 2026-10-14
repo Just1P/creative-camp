@@ -2,13 +2,14 @@ document
   .querySelectorAll('[data-href]')
   .forEach((btn) => btn.addEventListener('click', () => (window.location.href = btn.dataset.href)));
 
-// Trailer
+const music = document.querySelector('.musique');
 const trailer = document.querySelector('.trailer');
 const video = trailer.querySelector('.trailer__video');
 
 function openTrailer() {
   trailer.classList.add('is-open');
   trailer.setAttribute('aria-hidden', 'false');
+  music.pause();
   video.currentTime = 0;
   video.play();
 }
@@ -17,6 +18,7 @@ function closeTrailer() {
   trailer.classList.remove('is-open');
   trailer.setAttribute('aria-hidden', 'true');
   video.pause();
+  music.play().catch(() => {});
 }
 
 document.querySelector('[data-open-trailer]').addEventListener('click', openTrailer);
@@ -26,6 +28,20 @@ trailer
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && trailer.classList.contains('is-open')) closeTrailer();
 });
+
+// Musique du menu : le navigateur bloque le son avant la première interaction
+music.volume = 0.5;
+
+function startMusic() {
+  if (trailer.classList.contains('is-open')) return;
+  music
+    .play()
+    .then(() => ['pointerdown', 'keydown'].forEach((type) => document.removeEventListener(type, startMusic)))
+    .catch(() => {});
+}
+
+startMusic();
+['pointerdown', 'keydown'].forEach((type) => document.addEventListener(type, startMusic));
 
 // Parallaxe du décor et halo lumineux sur le titre
 const scene = document.querySelector('.scene');
@@ -48,7 +64,6 @@ titles.addEventListener('mousemove', (e) => {
   });
 });
 
-// Glitch léger et aléatoire sur le titre, en continu
 const rand = (min, max) => min + Math.random() * (max - min);
 
 function glitchTitle() {
@@ -70,9 +85,11 @@ function glitchTitle() {
   setTimeout(glitchTitle, rand(600, 3500));
 }
 
-titles.querySelectorAll('h1').forEach((title) =>
-  title.addEventListener('animationend', () => title.classList.remove('is-glitching'))
-);
+titles
+  .querySelectorAll('h1')
+  .forEach((title) =>
+    title.addEventListener('animationend', () => title.classList.remove('is-glitching')),
+  );
 setTimeout(glitchTitle, rand(300, 1500));
 
 function animateBg() {

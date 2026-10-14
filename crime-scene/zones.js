@@ -13,11 +13,26 @@ const ZONES = [
     titre: 'Arme',
     description: 'Arme du meurtre avec aucune empreinte de la victime',
     preuve: 'Ce pistolet semble être l’arme du crime',
+    image: '../assets/images/arme.png',
+    objet: {
+      nom: 'Pistolet 9mm',
+      description:
+        'Ce [pistolet] serait [l’arme du crime], la [balle] retrouvée sur le corps de la victime confirme cette hypothèse',
+      type: 'Indice',
+    },
     position: { left: 60, top: 93, width: 8, height: 5 },
   },
   {
     titre: 'Malette',
     description: 'Une malette posée à côté du corps.',
+    preuve: 'La malette contient des documents sur des disparitions d’humains',
+    image: '../assets/images/documents-infos.png',
+    objet: {
+      nom: 'Documents',
+      description:
+        'Des [dossiers] recensant des [disparitions d’humains], soigneusement rangés dans la malette de la victime',
+      type: 'Indice',
+    },
     position: { left: 40, top: 81, width: 9.5, height: 12 },
   },
   {
@@ -29,6 +44,14 @@ const ZONES = [
     titre: 'Coffre',
     description:
       'Dossiers confidentiels d’arrestations d’humains autorisés et signés par des repliquants haut placés',
+    preuve: 'Le coffre contient des dossiers d’arrestations signés par des réplicants haut placés',
+    image: '../assets/images/documents-arrest.png',
+    objet: {
+      nom: 'Dossiers d’arrestation',
+      description:
+        'Des [dossiers confidentiels] d’[arrestations d’humains], autorisés et signés par des [réplicants haut placés]',
+      type: 'Indice',
+    },
     position: { left: 80, top: 52, width: 11, height: 35 },
   },
   {
@@ -55,6 +78,14 @@ const ZONES = [
   {
     titre: 'Photos',
     description: 'Visages d’humains disparus dont la soeur d’Angela.',
+    preuve: 'Parmi les photos de disparus, on reconnaît la soeur d’Angela',
+    image: '../assets/images/photo.png',
+    objet: {
+      nom: 'Photos',
+      description:
+        'Des [photos] de [visages d’humains disparus], parmi lesquels on reconnaît la [soeur d’Angela]',
+      type: 'Indice',
+    },
     position: { left: 66, top: 52, width: 7, height: 15 },
     extension: { left: -57, top: 13, width: 57, height: 43 },
   },
@@ -86,6 +117,14 @@ const ZONES = [
   {
     titre: 'Bonsaï',
     description: 'Code du coffre-fort caché à l’intérieur.',
+    preuve: 'Un papier caché dans le bonsaï contient le code du coffre-fort',
+    image: '../assets/images/code.png',
+    objet: {
+      nom: 'Code du coffre',
+      description:
+        'Un [bout de papier] dissimulé dans la terre du [bonsaï], sur lequel est griffonné le [code du coffre-fort]',
+      type: 'Indice',
+    },
     position: { left: 17, top: 45.5, width: 10.5, height: 18 },
   },
   {

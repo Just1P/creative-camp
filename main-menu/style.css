@@ -65,7 +65,6 @@ h1 {
   text-align: center;
 }
 
-/* halo : copie floutée des lettres, éclairée seulement autour du curseur */
 h1::before {
   content: attr(data-text);
   position: absolute;
@@ -87,7 +86,6 @@ h1::before {
   --light-radius: 220px;
 }
 
-/* glitch léger : tranche des lettres décalée, avec la même lumière que le titre */
 h1::after {
   content: attr(data-text);
   position: absolute;
@@ -107,7 +105,6 @@ h1.is-glitching::after {
   animation: title-glitch 0.24s steps(1, end);
 }
 
-/* petit sursaut du titre entier (translate se cumule avec le transform de la parallaxe) */
 @keyframes title-jitter {
   0% {
     translate: var(--g-jitter, 2px) 0;
