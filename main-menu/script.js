@@ -18,7 +18,7 @@ function closeTrailer() {
   trailer.classList.remove('is-open');
   trailer.setAttribute('aria-hidden', 'true');
   video.pause();
-  music.play().catch(() => {});
+  if (soundOn) music.play().catch(() => {});
 }
 
 document.querySelector('[data-open-trailer]').addEventListener('click', openTrailer);
@@ -29,19 +29,19 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && trailer.classList.contains('is-open')) closeTrailer();
 });
 
-// Musique du menu : le navigateur bloque le son avant la première interaction
+// Musique du menu : coupée par défaut, le bouton « musique » l'active ou la coupe
 music.volume = 0.5;
+const soundToggle = document.querySelector('.sound-toggle');
+let soundOn = false;
 
-function startMusic() {
-  if (trailer.classList.contains('is-open')) return;
-  music
-    .play()
-    .then(() => ['pointerdown', 'keydown'].forEach((type) => document.removeEventListener(type, startMusic)))
-    .catch(() => {});
+function setSound(on) {
+  soundOn = on;
+  soundToggle.textContent = soundToggle.dataset.text = `musique : ${on ? 'on' : 'off'}`;
+  if (!on) music.pause();
+  else if (!trailer.classList.contains('is-open')) music.play().catch(() => setSound(false));
 }
 
-startMusic();
-['pointerdown', 'keydown'].forEach((type) => document.addEventListener(type, startMusic));
+soundToggle.addEventListener('click', () => setSound(!soundOn));
 
 // Parallaxe du décor et halo lumineux sur le titre
 const scene = document.querySelector('.scene');
