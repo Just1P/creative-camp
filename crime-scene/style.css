@@ -32,6 +32,24 @@
   height: 100%;
 }
 
+.decor-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.scene .decor-superpose {
+  position: absolute;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+
+.scene .decor-superpose.cache {
+  opacity: 0;
+}
+
 .zone {
   position: absolute;
   padding: 0;
@@ -402,6 +420,11 @@
 
 .digicode-touche.appuye .digicode-touche-appuyee {
   visibility: visible;
+}
+
+/* L'image appuyée est en partie transparente : on masque la normale derrière */
+.digicode-touche.appuye img:not(.digicode-touche-appuyee) {
+  visibility: hidden;
 }
 
 .digicode-touche:focus-visible {

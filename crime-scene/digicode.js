@@ -63,6 +63,7 @@ function taper(chiffre) {
     setTimeout(() => {
       const zone = zoneDigicode;
       zone.deverrouille = true;
+      if (zone.elementDeverrouille) zone.elementDeverrouille.classList.remove('cache');
       fermerDigicode();
       afficherZone(zone);
     }, DUREE_RESULTAT);

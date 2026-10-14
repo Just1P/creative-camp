@@ -106,8 +106,12 @@ zoneCases.addEventListener('mouseleave', () => {
 });
 
 const observateurInventaire = new MutationObserver(() => {
-  const ouvert = inventaire.classList.contains('ouvert') && !inventaire.classList.contains('sans-cases');
-  boutonInventaire.setAttribute('aria-label', ouvert ? "Fermer l'inventaire" : "Ouvrir l'inventaire");
+  const ouvert =
+    inventaire.classList.contains('ouvert') && !inventaire.classList.contains('sans-cases');
+  boutonInventaire.setAttribute(
+    'aria-label',
+    ouvert ? "Fermer l'inventaire" : "Ouvrir l'inventaire",
+  );
 });
 observateurInventaire.observe(inventaire, { attributes: true, attributeFilter: ['class'] });
 
@@ -182,10 +186,40 @@ function ajouterPreuve(zone) {
   return true;
 }
 
+// ---------- Musique ----------
+
+const musique = document.querySelector('.musique');
+musique.volume = 0.8;
+
+const ambiance = document.querySelector('.ambiance');
+ambiance.volume = 0.4;
+
+function lancerAmbiance() {
+  ambiance
+    .play()
+    .then(() =>
+      ['pointerdown', 'keydown'].forEach((type) =>
+        document.removeEventListener(type, lancerAmbiance),
+      ),
+    )
+    .catch(() => {});
+}
+
+lancerAmbiance();
+['pointerdown', 'keydown'].forEach((type) => document.addEventListener(type, lancerAmbiance));
+
+function changerMusique(source) {
+  const url = new URL(source, location.href).href;
+  if (musique.src === url && !musique.paused) return;
+  if (musique.src !== url) musique.src = url;
+  musique.play().catch(() => {});
+}
+
 // ---------- Zones ----------
 
 function afficherZone(zone) {
   zonesVues.add(zone);
+  if (zone.musique) changerMusique(zone.musique);
 
   const recuperable = Boolean(zone.preuve);
   if (recuperable && ajouterPreuve(zone)) {
@@ -206,7 +240,25 @@ function placer(element, { left, top, width, height }) {
   });
 }
 
+// Image posée par-dessus le décor (au-dessus de la vidéo)
+function superposer(source, position) {
+  const image = document.createElement('img');
+  image.className = 'decor-superpose';
+  image.src = source;
+  image.alt = '';
+  image.draggable = false;
+  placer(image, position);
+  decor.append(image);
+  return image;
+}
+
 ZONES.forEach((zone) => {
+  if (zone.imageDecor) superposer(zone.imageDecor, zone.positionDecor);
+  if (zone.imageDeverrouillee) {
+    zone.elementDeverrouille = superposer(zone.imageDeverrouillee, zone.positionDeverrouillee);
+    zone.elementDeverrouille.classList.add('cache');
+  }
+
   const bouton = document.createElement('button');
   bouton.className = 'zone';
   bouton.setAttribute('aria-label', zone.titre);

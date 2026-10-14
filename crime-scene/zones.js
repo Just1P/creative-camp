@@ -6,7 +6,7 @@ const ZONES = [
   },
   {
     titre: 'Fenêtre',
-    description: 'Ça fait maintenant 34 jours qu’il pleut...',
+    description: 'Ça fait maintenant 672 jours qu’il pleut...',
     position: { left: 18.25, top: 8.5, width: 33, height: 55 },
   },
   {
@@ -55,6 +55,9 @@ const ZONES = [
     digicode: '9732',
     // Zone dont l'indice affiche le code à côté du digicode une fois récupéré
     indiceDigicode: 'Bonsaï',
+    // Image affichée par-dessus le décor une fois le digicode validé
+    imageDeverrouillee: '../assets/images/coffr-open.png',
+    positionDeverrouillee: { left: 79.4, top: 52.3, width: 13, height: 39.1 },
     position: { left: 80, top: 52, width: 11, height: 35 },
   },
   {
@@ -110,6 +113,7 @@ const ZONES = [
   {
     titre: 'Vinyle',
     description: 'Même en 2099, Wish You Were Here reste un classique.',
+    musique: '../assets/musiques/One More Kiss, Dear - Vangelis.mp3',
     position: { left: 22.5, top: 70, width: 8.5, height: 12 },
   },
   {
@@ -128,6 +132,9 @@ const ZONES = [
         'Un [bout de papier] dissimulé dans la terre du [bonsaï], sur lequel est griffonné le [code du coffre-fort]',
       type: 'Indice',
     },
+    // Nouveau bonsaï affiché par-dessus celui du décor
+    imageDecor: '../assets/images/bonzai.png',
+    positionDecor: { left: 16.95, top: 45.4, width: 10.95, height: 19.47 },
     position: { left: 17, top: 45.5, width: 10.5, height: 18 },
   },
   {
