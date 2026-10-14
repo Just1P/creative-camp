@@ -8,7 +8,9 @@ const inventaireMessage = document.querySelector('.inventaire-message');
 const cases = inventaire.querySelectorAll('.case');
 const preuvesRecuperees = new Set();
 const DUREE_INVENTAIRE = 2500;
+const DELAI_LETTRE = 30;
 let fermetureInventaire;
+let ecriture;
 
 const canvas = progression.querySelector('canvas');
 const ctx = canvas.getContext('2d');
@@ -65,11 +67,46 @@ function majProgression(pourcentage) {
 
 dessinerProgression(0);
 
-// Range la preuve dans la première case libre, puis rentre l'inventaire
+// Écrit le message lettre par lettre ; la partie restante est invisible
+// pour que le bloc garde sa taille finale dès le début
+function ecrireMessage(message, finie) {
+  const ecrit = document.createElement('span');
+  const reste = document.createElement('span');
+  reste.className = 'inventaire-message-reste';
+  reste.textContent = message;
+  inventaireMessage.replaceChildren(ecrit, reste);
+  inventaireMessage.setAttribute('aria-label', message);
+
+  const lettres = [...message];
+  let i = 0;
+  clearInterval(ecriture);
+  ecriture = setInterval(() => {
+    i++;
+    ecrit.textContent = lettres.slice(0, i).join('');
+    reste.textContent = lettres.slice(i).join('');
+    if (i >= lettres.length) {
+      clearInterval(ecriture);
+      finie();
+    }
+  }, DELAI_LETTRE);
+}
+
+function ouvrirInventaire(message, avecCases) {
+  inventaire.classList.toggle('sans-cases', !avecCases);
+  inventaire.classList.add('ouvert');
+  clearTimeout(fermetureInventaire);
+  ecrireMessage(message, () => {
+    fermetureInventaire = setTimeout(() => {
+      inventaire.classList.remove('ouvert');
+    }, DUREE_INVENTAIRE);
+  });
+}
+
+// Range la preuve dans la première case libre
 function ajouterPreuve(zone) {
-  if (preuvesRecuperees.has(zone)) return;
+  if (preuvesRecuperees.has(zone)) return false;
   const caseLibre = [...cases].find((c) => !c.firstElementChild);
-  if (!caseLibre) return;
+  if (!caseLibre) return false;
   preuvesRecuperees.add(zone);
 
   let item;
@@ -83,20 +120,20 @@ function ajouterPreuve(zone) {
   }
   caseLibre.append(item);
   cases.forEach((c) => c.classList.toggle('nouvelle', c === caseLibre));
-
-  inventaireMessage.textContent = zone.dataset.preuve;
-  inventaire.classList.add('ouvert');
-  clearTimeout(fermetureInventaire);
-  fermetureInventaire = setTimeout(() => {
-    inventaire.classList.remove('ouvert');
-  }, DUREE_INVENTAIRE);
+  return true;
 }
 
 function afficherZone(zone) {
   zonesVues.add(zone);
   majProgression((zonesVues.size / zones.length) * 100);
 
-  if (zone.dataset.preuve) ajouterPreuve(zone);
+  const recuperable = Boolean(zone.dataset.preuve);
+  if (recuperable && ajouterPreuve(zone)) {
+    ouvrirInventaire(zone.dataset.preuve, true);
+  } else {
+    if (recuperable) cases.forEach((c) => c.classList.remove('nouvelle'));
+    ouvrirInventaire(zone.dataset.description, recuperable);
+  }
 }
 
 zones.forEach((zone) => {

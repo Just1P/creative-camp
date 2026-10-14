@@ -100,6 +100,11 @@ body {
   color: #fff;
   font-family: 'Iceland', sans-serif;
   font-size: 26px;
+  white-space: nowrap;
+}
+
+.inventaire-message-reste {
+  visibility: hidden;
 }
 
 .inventaire-cases {
@@ -107,9 +112,13 @@ body {
   gap: 20px;
 }
 
+.inventaire.sans-cases .inventaire-cases {
+  display: none;
+}
+
 .case {
   box-sizing: border-box;
-  width: 120px;
+  width: 90px;
   aspect-ratio: 1;
   display: grid;
   place-items: center;
