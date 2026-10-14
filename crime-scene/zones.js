@@ -14,6 +14,8 @@ const ZONES = [
     description: 'Arme du meurtre avec aucune empreinte de la victime',
     preuve: 'Ce pistolet semble être l’arme du crime',
     image: '../assets/images/arme.png',
+    imageRecuperee: '../assets/images/sol-sans-arme.png',
+    positionRecuperee: { left: 54.38, top: 88.1, width: 16.41, height: 12.22 },
     objet: {
       nom: 'Pistolet 9mm',
       description:
@@ -27,6 +29,8 @@ const ZONES = [
     description: 'Une malette posée à côté du corps.',
     preuve: 'La malette contient des documents sur des disparitions d’humains',
     image: '../assets/images/documents-infos.png',
+    imageRecuperee: '../assets/images/malette-open.png',
+    positionRecuperee: { left: 39.24, top: 74.77, width: 11.17, height: 18.52 },
     objet: {
       nom: 'Documents',
       description:

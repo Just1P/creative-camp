@@ -7,7 +7,10 @@ ce qui permet d'avancer et reculer dans les vidéos.
 import http.server
 import os
 import re
+import shutil
 import socketserver
+import subprocess
+import tempfile
 import webbrowser
 
 PORT = 8000
@@ -63,6 +66,61 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         pass
 
 
+# Navigateurs Chromium (Chrome, Edge, Brave...) acceptant l'option d'autoplay
+CHROMIUM = [
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "~/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+    "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+    "%ProgramFiles%/Google/Chrome/Application/chrome.exe",
+    "%ProgramFiles(x86)%/Google/Chrome/Application/chrome.exe",
+    "%LocalAppData%/Google/Chrome/Application/chrome.exe",
+    "%ProgramFiles(x86)%/Microsoft/Edge/Application/msedge.exe",
+    "%ProgramFiles%/Microsoft/Edge/Application/msedge.exe",
+    "google-chrome",
+    "chromium",
+    "chromium-browser",
+]
+
+
+def trouver_chromium():
+    for chemin in CHROMIUM:
+        chemin = os.path.expanduser(os.path.expandvars(chemin))
+        if os.path.isfile(chemin):
+            return chemin
+        if "/" not in chemin and shutil.which(chemin):
+            return shutil.which(chemin)
+    return None
+
+
+def ouvrir_navigateur(url):
+    """Ouvre le jeu dans Chrome/Edge avec la musique autorisée sans clic.
+
+    Le profil séparé permet à l'option de s'appliquer même si le navigateur
+    est déjà ouvert. Sans navigateur Chromium, on ouvre le navigateur par défaut.
+    """
+    navigateur = trouver_chromium()
+    if navigateur:
+        profil = os.path.join(tempfile.gettempdir(), "blade-runner-2099-navigateur")
+        try:
+            subprocess.Popen(
+                [
+                    navigateur,
+                    "--autoplay-policy=no-user-gesture-required",
+                    f"--user-data-dir={profil}",
+                    "--no-first-run",
+                    "--no-default-browser-check",
+                    url,
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            return
+        except OSError:
+            pass
+    webbrowser.open(url)
+
+
 class Serveur(socketserver.ThreadingMixIn, http.server.HTTPServer):
     daemon_threads = True
     allow_reuse_address = True
@@ -73,7 +131,7 @@ if __name__ == "__main__":
         url = f"http://localhost:{PORT}"
         print(f"Blade Runner 2099 tourne sur {url}")
         print("Fermez cette fenêtre (ou Ctrl+C) pour arrêter le jeu.")
-        webbrowser.open(url)
+        ouvrir_navigateur(url)
         try:
             serveur.serve_forever()
         except KeyboardInterrupt:

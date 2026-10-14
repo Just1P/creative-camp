@@ -181,6 +181,9 @@ function ajouterPreuve(zone) {
     item = document.createElement('span');
     item.textContent = zone.titre;
   }
+  // Animation jouée une seule fois : sinon elle se relance à chaque réaffichage des cases
+  item.classList.add('apparait');
+  item.addEventListener('animationend', () => item.classList.remove('apparait'), { once: true });
   caseLibre.append(item, creerFiche(zone));
   cases.forEach((c) => c.classList.toggle('nouvelle', c === caseLibre));
   return true;
@@ -225,6 +228,7 @@ function afficherZone(zone) {
   if (recuperable && ajouterPreuve(zone)) {
     ouvrirInventaire(zone.preuve, true);
     inventaire.classList.add('recuperation');
+    zone.elementRecupere?.classList.remove('cache');
   } else {
     ouvrirInventaire(zone.description, false);
   }
@@ -257,6 +261,10 @@ ZONES.forEach((zone) => {
   if (zone.imageDeverrouillee) {
     zone.elementDeverrouille = superposer(zone.imageDeverrouillee, zone.positionDeverrouillee);
     zone.elementDeverrouille.classList.add('cache');
+  }
+  if (zone.imageRecuperee) {
+    zone.elementRecupere = superposer(zone.imageRecuperee, zone.positionRecuperee);
+    zone.elementRecupere.classList.add('cache');
   }
 
   const bouton = document.createElement('button');

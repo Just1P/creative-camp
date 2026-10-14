@@ -224,7 +224,7 @@
   --bordure: rgb(236, 47, 91);
 }
 
-.case > :not(.fiche) {
+.case > .apparait {
   animation: apparition 0.3s ease-out 0.35s backwards;
 }
 

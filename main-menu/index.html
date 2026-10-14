@@ -12,23 +12,44 @@
   </head>
   <body>
     <div class="scene">
-      <video class="scene__bg" src="../assets/videos/menu-fond.mp4" autoplay muted loop playsinline></video>
+      <video
+        class="scene__bg"
+        src="../assets/videos/menu-fond.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+      ></video>
       <div class="titles">
         <h1 data-text="blade runner">blade runner</h1>
         <h1 class="number" data-text="2099">2099</h1>
       </div>
-      <img class="character character--reflection" src="../assets/images/personnage.png" alt="" aria-hidden="true" />
+      <img
+        class="character character--reflection"
+        src="../assets/images/personnage.png"
+        alt=""
+        aria-hidden="true"
+      />
       <img class="character" src="../assets/images/personnage.png" alt="" />
     </div>
     <nav class="menu">
-      <button class="menu__btn" type="button" data-text="jouer" data-href="../crime-scene/index.html">jouer</button>
+      <button
+        class="menu__btn"
+        type="button"
+        data-text="jouer"
+        data-href="../crime-scene/index.html"
+      >
+        jouer
+      </button>
       <button class="menu__btn" type="button" data-text="paramètres">paramètres</button>
       <button class="menu__btn" type="button" data-text="trailer" data-open-trailer>trailer</button>
     </nav>
     <div class="trailer" aria-hidden="true">
       <div class="trailer__backdrop" data-close-trailer></div>
       <div class="trailer__panel" role="dialog" aria-modal="true" aria-label="Trailer">
-        <button class="trailer__close" type="button" aria-label="Fermer" data-close-trailer>&times;</button>
+        <button class="trailer__close" type="button" aria-label="Fermer" data-close-trailer>
+          &times;
+        </button>
         <video
           class="trailer__video"
           src="../assets/videos/trailer.mp4"
@@ -38,7 +59,9 @@
         ></video>
       </div>
     </div>
-    <audio class="musique" src="../assets/musiques/bladerunner2099.mp3" loop preload="auto"></audio>
+    <audio autoplay class="musique" loop preload="auto">
+      <source src="../assets/musiques/bladerunner2099.mp3" />
+    </audio>
     <div class="corner corner--tl"></div>
     <div class="corner corner--tr"></div>
     <div class="corner corner--bl"></div>
