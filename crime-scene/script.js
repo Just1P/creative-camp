@@ -278,7 +278,9 @@ ZONES.forEach((zone) => {
     bouton.append(extension);
   }
   bouton.addEventListener('click', () => {
+    bouton.classList.add('vue');
     if (zone.digicode && !zone.deverrouille) ouvrirDigicode(zone);
+    else if (zone.imageZoom && !preuvesRecuperees.has(zone)) ouvrirZoom(zone, bouton);
     else afficherZone(zone);
   });
   decor.append(bouton);

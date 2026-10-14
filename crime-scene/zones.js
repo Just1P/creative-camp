@@ -1,7 +1,7 @@
 const ZONES = [
   {
     titre: 'Corp',
-    description: 'Blessures et trace de tissu du manteau d’angela',
+    description: 'Un réplicant haut placé. Il ne respire plus..',
     position: { left: 42, top: 73, width: 32, height: 16 },
   },
   {
@@ -57,9 +57,8 @@ const ZONES = [
       type: 'Indice',
     },
     digicode: '9732',
-    // Zone dont l'indice affiche le code à côté du digicode une fois récupéré
+
     indiceDigicode: 'Bonsaï',
-    // Image affichée par-dessus le décor une fois le digicode validé
     imageDeverrouillee: '../assets/images/coffr-open.png',
     positionDeverrouillee: { left: 79.4, top: 52.3, width: 13, height: 39.1 },
     position: { left: 80, top: 52, width: 11, height: 35 },
@@ -100,8 +99,8 @@ const ZONES = [
     extension: { left: -57, top: 13, width: 57, height: 43 },
   },
   {
-    titre: 'Messagerie',
-    description: 'Menaces recues en anonyme mais on peut reconnaire Angela.',
+    titre: 'Téléphone',
+    description: 'Un téléphone aussi vieux en 2099??',
     position: { left: 60, top: 61, width: 5, height: 5 },
   },
   {
@@ -116,7 +115,7 @@ const ZONES = [
   },
   {
     titre: 'Vinyle',
-    description: 'Même en 2099, Wish You Were Here reste un classique.',
+    description: 'Ce son me dit quelque chose.',
     musique: '../assets/musiques/One More Kiss, Dear - Vangelis.mp3',
     position: { left: 22.5, top: 70, width: 8.5, height: 12 },
   },
@@ -138,6 +137,9 @@ const ZONES = [
     },
     // Nouveau bonsaï affiché par-dessus celui du décor
     imageDecor: '../assets/images/bonzai.png',
+    // Vue rapprochée affichée au clic, avant puis après avoir pris le papier
+    imageZoom: '../assets/images/bonzai-zoom.png',
+    imageZoomRecuperee: '../assets/images/bonzai-no-paper.png',
     positionDecor: { left: 16.95, top: 45.4, width: 10.95, height: 19.47 },
     position: { left: 17, top: 45.5, width: 10.5, height: 18 },
   },

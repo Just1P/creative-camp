@@ -59,6 +59,10 @@
   border: red solid 1px;
 }
 
+.zone.vue {
+  border-color: transparent;
+}
+
 .zone-extension {
   position: absolute;
   outline: inherit;
@@ -462,4 +466,46 @@
   75% {
     transform: translateX(2cqw);
   }
+}
+
+/* ---------- Zoom ---------- */
+
+.zoom {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  /* Ligne de grille définie : sinon la hauteur en % du bonsaï est ignorée */
+  grid-template-rows: 100%;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.45s,
+    visibility 0.45s;
+}
+
+.zoom.ouvert {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Proportions calées sur bonzai-zoom.png (2568 x 2450) */
+.zoom-objet {
+  height: 80%;
+  aspect-ratio: 2568 / 2450;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transform: translate(var(--depart-x, 0), var(--depart-y, 0)) scale(var(--depart-echelle, 0.4));
+  transition: transform 0.45s ease-in-out;
+}
+
+.zoom.ouvert .zoom-objet {
+  transform: none;
+}
+
+.zoom-objet img {
+  image-rendering: pixelated;
 }
