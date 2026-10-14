@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Iceland&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="scene">
+      <video class="scene__bg" src="public/animated-bg.mp4" autoplay muted loop playsinline></video>
+      <div class="titles">
+        <h1 data-text="blade runner">blade runner</h1>
+        <h1 class="number" data-text="2099">2099</h1>
+      </div>
+      <img class="character character--reflection" src="public/perso%20main%20screen.png" alt="" aria-hidden="true" />
+      <img class="character" src="public/perso%20main%20screen.png" alt="" />
+    </div>
+    <nav class="menu">
+      <button class="menu__btn" type="button" data-text="jouer">jouer</button>
+      <button class="menu__btn" type="button" data-text="paramètres">paramètres</button>
+      <button class="menu__btn" type="button" data-text="trailer" data-open-trailer>trailer</button>
+    </nav>
+    <div class="trailer" aria-hidden="true">
+      <div class="trailer__backdrop" data-close-trailer></div>
+      <div class="trailer__panel" role="dialog" aria-modal="true" aria-label="Trailer">
+        <button class="trailer__close" type="button" aria-label="Fermer" data-close-trailer>&times;</button>
+        <video
+          class="trailer__video"
+          src="public/Blade%20Runner%202099%20-%20NYCC%20Trailer%20%20Prime%20Video.mp4"
+          controls
+          preload="metadata"
+          playsinline
+        ></video>
+      </div>
+    </div>
+    <div class="corner corner--tl"></div>
+    <div class="corner corner--tr"></div>
+    <div class="corner corner--bl"></div>
+    <div class="corner corner--br"></div>
+    <script>
+      const trailer = document.querySelector('.trailer');
+      const video = trailer.querySelector('.trailer__video');
+
+      function openTrailer() {
+        trailer.classList.add('is-open');
+        trailer.setAttribute('aria-hidden', 'false');
+        video.currentTime = 0;
+        video.play();
+      }
+
+      function closeTrailer() {
+        trailer.classList.remove('is-open');
+        trailer.setAttribute('aria-hidden', 'true');
+        video.pause();
+      }
+
+      document.querySelector('[data-open-trailer]').addEventListener('click', openTrailer);
+      trailer.querySelectorAll('[data-close-trailer]').forEach((el) => el.addEventListener('click', closeTrailer));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && trailer.classList.contains('is-open')) closeTrailer();
+      });
+
+      const scene = document.querySelector('.scene');
+      let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
+
+      document.addEventListener('mousemove', (e) => {
+        targetX = -(e.clientX / window.innerWidth - 0.5) * 2;
+        targetY = -(e.clientY / window.innerHeight - 0.5) * 2;
+      });
+
+      const titles = document.querySelector('.titles');
+      titles.addEventListener('mousemove', (e) => {
+        titles.querySelectorAll('h1').forEach((title) => {
+          const rect = title.getBoundingClientRect();
+          title.style.setProperty('--lx', `${e.clientX - rect.left}px`);
+          title.style.setProperty('--ly', `${e.clientY - rect.top}px`);
+        });
+      });
+
+      function animateBg() {
+        currentX += (targetX - currentX) * 0.05;
+        currentY += (targetY - currentY) * 0.05;
+        scene.style.setProperty('--mx', currentX.toFixed(4));
+        scene.style.setProperty('--my', currentY.toFixed(4));
+        requestAnimationFrame(animateBg);
+      }
+      animateBg();
+    </script>
+  </body>
+</html>

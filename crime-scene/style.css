@@ -1,0 +1,158 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+body {
+  display: grid;
+  place-items: center;
+}
+
+.inventaire-message,
+.case {
+  --bordure-pixel:
+    0 calc(-1 * var(--epaisseur)) 0 0 var(--bordure), 0 var(--epaisseur) 0 0 var(--bordure),
+    calc(-1 * var(--epaisseur)) 0 0 0 var(--bordure), var(--epaisseur) 0 0 0 var(--bordure);
+}
+
+.scene {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: min(100vw, 100vh * 16 / 9);
+}
+
+.scene img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.zone {
+  position: absolute;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  outline: 2px solid red;
+}
+
+/* Encart rattaché à une zone pour couvrir une forme non rectangulaire */
+.zone-extension {
+  position: absolute;
+  outline: inherit;
+}
+
+.progression {
+  position: absolute;
+  left: 3%;
+  top: 3%;
+  width: 180px;
+  height: 180px;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.progression canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.progression-texte {
+  position: relative;
+  color: #fff;
+  font-family: 'Iceland', sans-serif;
+  font-size: 48px;
+  line-height: 1;
+}
+
+.inventaire {
+  position: absolute;
+  left: 50%;
+  bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  transform: translate(-50%, calc(100% + 30px));
+  transition: transform 0.4s ease;
+  pointer-events: none;
+}
+
+.inventaire.ouvert {
+  transform: translate(-50%, 0);
+}
+
+.inventaire-message {
+  margin: 0;
+  padding: 6px 12px;
+  background: #222;
+  box-shadow: var(--bordure-pixel);
+  --bordure: #515151e5;
+  --epaisseur: 3px;
+  color: #fff;
+  font-family: 'Iceland', sans-serif;
+  font-size: 26px;
+  white-space: nowrap;
+}
+
+.inventaire-message-reste {
+  visibility: hidden;
+}
+
+.inventaire-cases {
+  display: flex;
+  gap: 20px;
+}
+
+.inventaire.sans-cases .inventaire-cases {
+  display: none;
+}
+
+.case {
+  box-sizing: border-box;
+  width: 90px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  background: #222;
+  box-shadow: var(--bordure-pixel);
+  --bordure: #5c5c5c;
+  --epaisseur: 4px;
+  transition: box-shadow 0.3s;
+}
+
+.case.nouvelle {
+  --bordure: rgb(236, 47, 91);
+}
+
+.case > * {
+  animation: apparition 0.3s ease-out 0.35s backwards;
+}
+
+.case img {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+.case span {
+  color: #fff;
+  font-family: 'Iceland', sans-serif;
+  font-size: 18px;
+  text-align: center;
+}
+
+@keyframes apparition {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}

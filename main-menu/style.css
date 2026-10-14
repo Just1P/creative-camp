@@ -1,0 +1,327 @@
+@font-face {
+  font-family: 'Blade Runner Movie Font';
+  src: url('public/fonts/BladeRunnerMovieFont.ttf') format('truetype');
+  font-display: swap;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  background: #000;
+}
+
+.scene {
+  position: relative;
+  flex: none;
+  width: max(100vw, 100vh * 3854 / 2158);
+  aspect-ratio: 3854 / 2158;
+  display: grid;
+  place-items: center;
+  align-content: center;
+}
+
+.scene__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+  --parallax: 16px;
+  transform: translate(calc(var(--mx, 0) * var(--parallax)), calc(var(--my, 0) * var(--parallax)))
+    scale(1.03);
+  will-change: transform;
+}
+
+.scene::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
+
+@property --light-radius {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 0px;
+}
+
+h1 {
+  position: relative;
+  z-index: 1;
+  font-family: 'Blade Runner Movie Font', sans-serif;
+  font-size: 125px;
+  font-weight: normal;
+  color: transparent;
+  background: radial-gradient(
+    circle var(--light-radius) at var(--lx, 50%) var(--ly, 50%),
+    #ff2e74 0%,
+    #fe1264 35%,
+    #da1057 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: --light-radius 0.4s ease;
+  margin: 0;
+  line-height: 1;
+  --parallax: 24px;
+  transform: translate(
+    calc(var(--mx, 0) * var(--parallax)),
+    calc(-120px + var(--my, 0) * var(--parallax))
+  );
+  will-change: transform;
+  word-spacing: -0.3em;
+  user-select: none;
+  -webkit-user-select: none;
+  text-align: center;
+}
+
+/* halo : copie floutée des lettres, éclairée seulement autour du curseur */
+h1::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    circle var(--light-radius) at var(--lx, 50%) var(--ly, 50%),
+    rgb(254 18 100 / 0.3) 0%,
+    rgb(254 18 100 / 0.15) 40%,
+    transparent 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.titles:hover h1 {
+  --light-radius: 220px;
+}
+
+.number {
+  letter-spacing: 80%;
+}
+
+.character {
+  position: absolute;
+  z-index: 99;
+  left: 47%;
+  top: 25%;
+  height: 65%;
+  --parallax: 16px;
+  transform: translate(
+    calc(-50% + var(--mx, 0) * var(--parallax)),
+    calc(var(--my, 0) * var(--parallax))
+  );
+  will-change: transform;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+.character--reflection {
+  z-index: 98;
+  --reflection-offset: 2%;
+  transform-origin: center bottom;
+  transform: translate(
+      calc(-50% + var(--mx, 0) * var(--parallax)),
+      calc(var(--my, 0) * var(--parallax) - var(--reflection-offset))
+    )
+    scaleY(-1);
+  filter: brightness(0.15);
+  opacity: 0.8;
+  -webkit-mask-image: linear-gradient(to top, black 0%, transparent 90%);
+  mask-image: linear-gradient(to top, black 0%, transparent 90%);
+}
+
+.corner {
+  --corner-inset: 25px;
+  --corner-thickness: 1px;
+  position: fixed;
+  z-index: 100;
+  width: 150px;
+  height: 150px;
+  border-style: solid;
+  border-color: white;
+  border-width: 0;
+  pointer-events: none;
+}
+
+.corner--tl {
+  top: var(--corner-inset);
+  left: var(--corner-inset);
+  border-top-width: var(--corner-thickness);
+  border-left-width: var(--corner-thickness);
+}
+
+.corner--tr {
+  top: var(--corner-inset);
+  right: var(--corner-inset);
+  border-top-width: var(--corner-thickness);
+  border-right-width: var(--corner-thickness);
+}
+
+.corner--bl {
+  bottom: var(--corner-inset);
+  left: var(--corner-inset);
+  border-bottom-width: var(--corner-thickness);
+  border-left-width: var(--corner-thickness);
+}
+
+.corner--br {
+  bottom: var(--corner-inset);
+  right: var(--corner-inset);
+  border-bottom-width: var(--corner-thickness);
+  border-right-width: var(--corner-thickness);
+}
+
+.menu {
+  position: fixed;
+  z-index: 101;
+  left: 80px;
+  bottom: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.menu__btn {
+  font-family: 'Iceland', sans-serif;
+  font-size: 48px;
+  color: white;
+  background: linear-gradient(#fe1264, #fe1264) left / 0% 100% no-repeat;
+  border: none;
+  padding: 7px 20px 7px 5px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  transition:
+    color 0.15s,
+    background-size 0.15s ease-out,
+    transform 0.15s;
+}
+
+.menu__btn {
+  position: relative;
+}
+
+.menu__btn::before {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  padding: inherit;
+  background: #fe1264;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.menu__btn:hover::before,
+.menu__btn:focus-visible::before {
+  animation: menu-glitch-slice 2.4s steps(1, end) infinite;
+}
+
+@keyframes menu-glitch-slice {
+  0% {
+    opacity: 1;
+    clip-path: inset(20% 0 55% 0);
+    transform: translateX(-6px);
+  }
+  3% {
+    opacity: 1;
+    clip-path: inset(60% 0 15% 0);
+    transform: translateX(4px);
+  }
+  6% {
+    opacity: 1;
+    clip-path: inset(40% 0 42% 0);
+    transform: translateX(-3px);
+  }
+  9% {
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+    clip-path: inset(68% 0 12% 0);
+    transform: translateX(5px);
+  }
+  58% {
+    opacity: 0;
+  }
+}
+
+.menu__btn:hover,
+.menu__btn:focus-visible {
+  background-size: 100% 100%;
+  outline: none;
+}
+
+.trailer {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.trailer.is-open {
+  pointer-events: auto;
+}
+
+.trailer__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.trailer.is-open .trailer__backdrop {
+  opacity: 1;
+}
+
+.trailer__panel {
+  position: relative;
+  width: min(70vw, 70vh * 16 / 9);
+  aspect-ratio: 16 / 9;
+  background: #000;
+  transform: translateY(100vh);
+  transition: transform 0.5s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.trailer.is-open .trailer__panel {
+  transform: translateY(0);
+}
+
+.trailer__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+.trailer__close {
+  position: absolute;
+  top: -52px;
+  right: -1px;
+  width: 44px;
+  height: 44px;
+  font-size: 40px;
+  line-height: 1;
+  color: white;
+  background: transparent;
+  cursor: pointer;
+  border: none;
+}
