@@ -362,26 +362,22 @@ h1.is-glitching::after {
   z-index: 200;
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 56px;
+  height: 56px;
   padding: 0;
   background: none;
   border: none;
   color: #fff;
   cursor: pointer;
-  opacity: 0.8;
-  transition: opacity 0.2s;
 }
 
-.plein-ecran:hover,
 .plein-ecran:focus-visible {
-  opacity: 1;
   outline: none;
 }
 
 .plein-ecran svg {
-  width: 21px;
-  height: 21px;
+  width: 35px;
+  height: 35px;
   fill: currentColor;
   shape-rendering: crispEdges;
 }
