@@ -350,3 +350,46 @@ h1.is-glitching::after {
   cursor: pointer;
   border: none;
 }
+
+/* Bouton plein écran : dans le coin haut droit */
+.plein-ecran {
+  position: fixed;
+  top: 40px;
+  right: 40px;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.plein-ecran:hover,
+.plein-ecran:focus-visible {
+  opacity: 1;
+  outline: none;
+}
+
+.plein-ecran svg {
+  width: 21px;
+  height: 21px;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+}
+
+/* Scène de crime ouverte par-dessus le menu */
+.jeu {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #000;
+}

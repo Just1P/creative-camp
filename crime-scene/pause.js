@@ -41,9 +41,25 @@ boutonSon.addEventListener('click', () => {
   majSon();
 });
 
+const boutonPleinEcran = pause.querySelector('.pause-plein-ecran');
+
+function majPleinEcran() {
+  boutonPleinEcran.textContent = `Plein écran : ${estPleinEcran() ? 'on' : 'off'}`;
+}
+
+if (pleinEcranDisponible) {
+  boutonPleinEcran.addEventListener('click', basculerPleinEcran);
+  surChangementPleinEcran(majPleinEcran);
+  majPleinEcran();
+} else {
+  boutonPleinEcran.remove();
+}
+
 pause.querySelector('.pause-reprendre').addEventListener('click', fermerPause);
 pause.querySelector('.pause-quitter').addEventListener('click', () => {
-  location.href = '../main-menu/index.html';
+  // Ouverte depuis le menu : on referme simplement le cadre du jeu pour garder le plein écran
+  if (pageRacine !== window) pageRacine.fermerJeu();
+  else location.href = '../main-menu/index.html';
 });
 
 majSon();

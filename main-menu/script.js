@@ -1,10 +1,55 @@
-document
-  .querySelectorAll('[data-href]')
-  .forEach((btn) => btn.addEventListener('click', () => (window.location.href = btn.dataset.href)));
-
 const music = document.querySelector('.musique');
 const trailer = document.querySelector('.trailer');
 const video = trailer.querySelector('.trailer__video');
+const fondMenu = document.querySelector('.scene__bg');
+
+// Le jeu s'ouvre dans un cadre par-dessus le menu : changer de page ferait sortir du plein écran
+let cadreJeu = null;
+
+function ouvrirJeu(url) {
+  if (cadreJeu) return;
+  cadreJeu = document.createElement('iframe');
+  cadreJeu.className = 'jeu';
+  cadreJeu.src = url;
+  cadreJeu.allow = 'autoplay; fullscreen';
+  cadreJeu.addEventListener('load', () => cadreJeu.focus());
+  document.body.append(cadreJeu);
+  music.pause();
+  fondMenu.pause();
+}
+
+// Appelée par la scène de crime (bouton « Menu principal » de la pause)
+function fermerJeu() {
+  if (!cadreJeu) return;
+  cadreJeu.remove();
+  cadreJeu = null;
+  fondMenu.play().catch(() => {});
+  if (soundOn) music.play().catch(() => {});
+}
+
+document
+  .querySelectorAll('[data-href]')
+  .forEach((btn) => btn.addEventListener('click', () => ouvrirJeu(btn.dataset.href)));
+
+// Bouton plein écran dans le coin haut droit
+if (pleinEcranDisponible) {
+  const ICONE_ENTRER = 'M0 0h3v1H1v2H0zM4 0h3v3H6V1H4zM0 4h1v2h2v1H0zM6 4h1v3H4V6h2z';
+  const ICONE_SORTIR = 'M2 0h1v3H0V2h2zM4 0h1v2h2v1H4zM0 4h3v3H2V5H0zM4 4h3v1H5v2H4z';
+  const boutonPleinEcran = document.createElement('button');
+  boutonPleinEcran.type = 'button';
+  boutonPleinEcran.className = 'plein-ecran';
+  boutonPleinEcran.innerHTML = '<svg viewBox="0 0 7 7" aria-hidden="true"><path /></svg>';
+  document.body.append(boutonPleinEcran);
+
+  const majPleinEcran = () => {
+    const actif = estPleinEcran();
+    boutonPleinEcran.querySelector('path').setAttribute('d', actif ? ICONE_SORTIR : ICONE_ENTRER);
+    boutonPleinEcran.setAttribute('aria-label', actif ? 'Quitter le plein écran' : 'Plein écran');
+  };
+  boutonPleinEcran.addEventListener('click', basculerPleinEcran);
+  surChangementPleinEcran(majPleinEcran);
+  majPleinEcran();
+}
 
 function openTrailer() {
   trailer.classList.add('is-open');
