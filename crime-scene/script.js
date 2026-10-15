@@ -157,11 +157,7 @@ function creerFiche(zone) {
     }
   });
 
-  const type = document.createElement('p');
-  type.className = 'fiche-type';
-  type.textContent = objet.type || 'Indice';
-
-  fiche.append(nom, texte, type);
+  fiche.append(nom, texte);
   return fiche;
 }
 

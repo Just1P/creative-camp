@@ -307,15 +307,6 @@
   color: rgb(236, 47, 91);
 }
 
-.fiche-type {
-  padding: 1px 10px;
-  background: rgb(236, 47, 91);
-  box-shadow: var(--bordure-pixel);
-  --bordure: rgb(236, 47, 91);
-  --epaisseur: 3px;
-  font-size: 19px;
-}
-
 @keyframes apparition {
   from {
     opacity: 0;
