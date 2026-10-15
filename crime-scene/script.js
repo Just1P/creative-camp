@@ -229,6 +229,7 @@ function afficherZone(zone) {
     ouvrirInventaire(zone.preuve, true);
     inventaire.classList.add('recuperation');
     zone.elementRecupere?.classList.remove('cache');
+    zone.elementDecor?.classList.add('cache');
   } else {
     ouvrirInventaire(zone.description, false);
   }
@@ -257,7 +258,7 @@ function superposer(source, position) {
 }
 
 ZONES.forEach((zone) => {
-  if (zone.imageDecor) superposer(zone.imageDecor, zone.positionDecor);
+  if (zone.imageDecor) zone.elementDecor = superposer(zone.imageDecor, zone.positionDecor);
   if (zone.imageDeverrouillee) {
     zone.elementDeverrouille = superposer(zone.imageDeverrouillee, zone.positionDeverrouillee);
     zone.elementDeverrouille.classList.add('cache');

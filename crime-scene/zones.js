@@ -75,8 +75,7 @@ const ZONES = [
   },
   {
     titre: 'Caméra',
-    description:
-      'Enregistrement partiel de l’effraction, mais le meurtre et la lutte ont été effacés.',
+    description: 'L’enregistrement de la caméra a été trafiqué : le meurtre a été effacé',
     position: { left: 65, top: 13, width: 4, height: 8 },
   },
   {
@@ -135,7 +134,7 @@ const ZONES = [
         'Un [bout de papier] dissimulé dans la terre du [bonsaï], sur lequel est griffonné le [code du coffre-fort]',
       type: 'Indice',
     },
-    // Nouveau bonsaï affiché par-dessus celui du décor
+    // Nouveau bonsaï affiché par-dessus celui du décor, retiré une fois le code récupéré
     imageDecor: '../assets/images/bonzai.png',
     // Vue rapprochée affichée au clic, avant puis après avoir pris le papier
     imageZoom: '../assets/images/bonzai-zoom.png',
@@ -147,11 +146,6 @@ const ZONES = [
     titre: 'Juke-box',
     description: 'Un vieux juke-box, il ne marche plus depuis longtemps.',
     position: { left: 6, top: 38.5, width: 7.5, height: 57 },
-  },
-  {
-    titre: 'Enseigne',
-    description: 'Empathy Tester, l’enseigne est éteinte.',
-    position: { left: 9.75, top: 0, width: 12, height: 13.5 },
   },
   {
     titre: 'Échiquier',
