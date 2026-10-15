@@ -6,13 +6,40 @@ const fondMenu = document.querySelector('.scene__bg');
 // Le jeu s'ouvre dans un cadre par-dessus le menu : changer de page ferait sortir du plein écran
 let cadreJeu = null;
 
+const chargement = document.querySelector('.chargement');
+
+// L'écran de chargement reste affiché tant que le jeu charge, et au moins une fois en entier
+function afficherChargement(cadre) {
+  let jeuCharge = false;
+  let videoFinie = false;
+  const terminer = () => {
+    if (!jeuCharge || !videoFinie) return;
+    chargement.classList.remove('visible');
+    cadre.focus();
+  };
+
+  cadre.addEventListener('load', () => {
+    jeuCharge = true;
+    terminer();
+  });
+  chargement.onended = () => {
+    videoFinie = true;
+    if (jeuCharge) terminer();
+    else chargement.play().catch(() => {});
+  };
+
+  chargement.currentTime = 0;
+  chargement.classList.add('visible');
+  chargement.play().catch(() => chargement.onended());
+}
+
 function ouvrirJeu(url) {
   if (cadreJeu) return;
   cadreJeu = document.createElement('iframe');
   cadreJeu.className = 'jeu';
   cadreJeu.src = url;
   cadreJeu.allow = 'autoplay; fullscreen';
-  cadreJeu.addEventListener('load', () => cadreJeu.focus());
+  afficherChargement(cadreJeu);
   document.body.append(cadreJeu);
   music.pause();
   fondMenu.pause();
