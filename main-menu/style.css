@@ -153,6 +153,9 @@ h1.is-glitching::after {
   will-change: transform;
   image-rendering: pixelated;
   pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
 }
 
 .character--reflection {
