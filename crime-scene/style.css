@@ -4,7 +4,7 @@
 .inventaire-bouton,
 .fiche,
 .fiche-texte,
-.fiche-type {
+.fin-boite {
   --bordure-pixel:
     0 calc(-1 * var(--epaisseur)) 0 0 var(--bordure), 0 var(--epaisseur) 0 0 var(--bordure),
     calc(-1 * var(--epaisseur)) 0 0 0 var(--bordure), var(--epaisseur) 0 0 0 var(--bordure);
@@ -312,6 +312,179 @@
     opacity: 0;
     transform: scale(0.9);
   }
+}
+
+/* ---------- Fin de l'enquête ---------- */
+
+.bouton-coin {
+  --couleur: rgb(236, 47, 91);
+  --coin: 14px;
+  --epaisseur: 4px;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 8px 30px 8px 18px;
+  background: var(--couleur);
+  border: none;
+  color: #fff;
+  font-family: 'Iceland', sans-serif;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--coin)),
+    calc(100% - var(--coin)) 100%,
+    0 100%
+  );
+}
+
+.bouton-coin::before {
+  content: '';
+  position: absolute;
+  inset: var(--epaisseur);
+  z-index: -1;
+  /* Même remplissage de gauche à droite que les boutons du menu */
+  background: linear-gradient(var(--couleur), var(--couleur)) left / 0% 100% no-repeat #222;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - var(--coin) + 2px),
+    calc(100% - var(--coin) + 2px) 100%,
+    0 100%
+  );
+  transition: background-size 0.15s ease-out;
+}
+
+.bouton-coin:hover::before,
+.bouton-coin:focus-visible::before {
+  background-size: 100% 100%;
+}
+
+.bouton-coin:focus-visible {
+  outline: none;
+}
+
+.bouton-coin svg {
+  width: 12px;
+  height: 21px;
+  fill: currentColor;
+  shape-rendering: crispEdges;
+}
+
+.terminer {
+  position: absolute;
+  right: 2%;
+  bottom: 4%;
+  z-index: 1;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition:
+    opacity 0.3s,
+    transform 0.3s,
+    visibility 0.3s;
+}
+
+.terminer.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.fin,
+.pause {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s,
+    visibility 0.25s;
+}
+
+.fin.ouvert,
+.pause.ouvert {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fin-boite {
+  grid-area: 1 / 1;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 420px;
+  padding: 22px 28px 26px;
+  background: rgba(10, 10, 12, 0.92);
+  box-shadow: var(--bordure-pixel);
+  --bordure: #5c5c5c;
+  --epaisseur: 4px;
+  color: #fff;
+  font-family: 'Iceland', sans-serif;
+  text-align: center;
+}
+
+.fin.confirmation .fin-confirmation,
+.fin.merci .fin-merci {
+  display: flex;
+}
+
+.fin-boite p {
+  margin: 0;
+}
+
+.fin-titre {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.fin-texte {
+  color: #ccc;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.fin-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.fin-actions .bouton-coin {
+  font-size: 24px;
+}
+
+/* ---------- Pause ---------- */
+
+.pause {
+  z-index: 4;
+}
+
+.pause .pause-boite {
+  display: flex;
+  gap: 22px;
+  min-width: 280px;
+}
+
+.pause-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  width: 100%;
+}
+
+.pause-actions .bouton-coin {
+  font-size: 26px;
 }
 
 /* ---------- Digicode ---------- */

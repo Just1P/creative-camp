@@ -48,7 +48,32 @@ function majObjectifs() {
       return ligne;
     }),
   );
+  boutonTerminer.classList.toggle('visible', preuvesRecuperees.size >= OBJECTIFS[0].total);
 }
+
+// ---------- Fin de l'enquête ----------
+
+const boutonTerminer = document.querySelector('.terminer');
+const fin = document.querySelector('.fin');
+const finTexte = fin.querySelector('.fin-confirmation .fin-texte');
+
+function afficherFin(etape) {
+  fin.classList.remove('confirmation', 'merci');
+  fin.classList.add('ouvert', etape);
+}
+
+boutonTerminer.addEventListener('click', () => {
+  const restantes = ZONES.length - zonesVues.size;
+  if (restantes === 0) return afficherFin('merci');
+  finTexte.textContent =
+    restantes === 1
+      ? 'Il reste 1 zone que vous n’avez pas inspectée.'
+      : `Il reste ${restantes} zones que vous n’avez pas inspectées.`;
+  afficherFin('confirmation');
+});
+
+fin.querySelector('.fin-annuler').addEventListener('click', () => fin.classList.remove('ouvert'));
+fin.querySelector('.fin-valider').addEventListener('click', () => afficherFin('merci'));
 
 majObjectifs();
 
@@ -290,7 +315,9 @@ let cibleX = 0,
   actuelX = 0,
   actuelY = 0;
 
+// Le décor reste figé pendant la pause
 document.addEventListener('mousemove', (e) => {
+  if (pause.classList.contains('ouvert')) return;
   cibleX = -(e.clientX / window.innerWidth - 0.5) * 2;
   cibleY = -(e.clientY / window.innerHeight - 0.5) * 2;
 });

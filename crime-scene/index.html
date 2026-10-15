@@ -48,7 +48,40 @@
           <div class="case"></div>
           <div class="case"></div>
           <div class="case"></div>
-          <div class="case"></div>
+        </div>
+      </div>
+
+      <button class="bouton-coin terminer" type="button">
+        Terminer l’enquête
+        <svg viewBox="0 0 4 7" aria-hidden="true">
+          <path d="M0 0h1v1h1v1h1v1h1v1H3v1H2v1H1v1H0z" />
+        </svg>
+      </button>
+
+      <div class="fin" role="dialog" aria-label="Fin de l’enquête">
+        <div class="fin-boite fin-confirmation">
+          <p class="fin-titre">Terminer l’enquête ?</p>
+          <p class="fin-texte"></p>
+          <p class="fin-texte">Voulez-vous tout de même partir ?</p>
+          <div class="fin-actions">
+            <button class="bouton-coin fin-annuler" type="button">Continuer</button>
+            <button class="bouton-coin fin-valider" type="button">Terminer</button>
+          </div>
+        </div>
+        <div class="fin-boite fin-merci">
+          <p class="fin-titre">Merci d’avoir joué !</p>
+          <p class="fin-texte">Vous êtes arrivé au bout de la démo. À bientôt pour la suite de l’enquête.</p>
+        </div>
+      </div>
+
+      <div class="pause" role="dialog" aria-label="Pause">
+        <div class="fin-boite pause-boite">
+          <p class="fin-titre">Pause</p>
+          <div class="pause-actions">
+            <button class="bouton-coin pause-reprendre" type="button">Reprendre</button>
+            <button class="bouton-coin pause-son" type="button">Musique : on</button>
+            <button class="bouton-coin pause-quitter" type="button">Menu principal</button>
+          </div>
         </div>
       </div>
 
@@ -71,6 +104,7 @@
     <script src="../shared/base.js"></script>
     <script src="zones.js"></script>
     <script src="script.js"></script>
+    <script src="pause.js"></script>
     <script src="digicode.js"></script>
     <script src="zoom.js"></script>
   </body>
