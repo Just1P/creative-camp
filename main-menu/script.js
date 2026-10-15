@@ -8,24 +8,31 @@ let cadreJeu = null;
 
 const chargement = document.querySelector('.chargement');
 
-// L'écran de chargement reste affiché tant que le jeu charge, et au moins une fois en entier
+// Délai max d'attente du jeu après la fin de la vidéo, pour ne jamais rester bloqué
+const ATTENTE_MAX_JEU = 8000;
+
+// L'écran de chargement est joué une fois en entier, puis reste sur sa dernière image
+// jusqu'à ce que le jeu soit prêt (appel de jeuPret() par la scène, ou load en secours)
 function afficherChargement(cadre) {
   let jeuCharge = false;
   let videoFinie = false;
   const terminer = () => {
-    if (!jeuCharge || !videoFinie) return;
+    if (!jeuCharge || !videoFinie || cadreJeu !== cadre) return;
+    window.jeuPret = null;
     chargement.classList.remove('visible');
     cadre.focus();
   };
-
-  cadre.addEventListener('load', () => {
+  const marquerCharge = () => {
     jeuCharge = true;
     terminer();
-  });
+  };
+
+  window.jeuPret = marquerCharge;
+  cadre.addEventListener('load', marquerCharge);
   chargement.onended = () => {
     videoFinie = true;
-    if (jeuCharge) terminer();
-    else chargement.play().catch(() => {});
+    terminer();
+    setTimeout(marquerCharge, ATTENTE_MAX_JEU);
   };
 
   chargement.currentTime = 0;

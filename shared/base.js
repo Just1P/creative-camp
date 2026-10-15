@@ -15,6 +15,11 @@ function trouverPageRacine() {
 }
 
 const pageRacine = trouverPageRacine();
+
+// Prévient le menu dès que la page est construite, sans attendre vidéos et sons (event load)
+if (pageRacine !== window) {
+  document.addEventListener('DOMContentLoaded', () => pageRacine.jeuPret?.());
+}
 const docRacine = pageRacine.document;
 const pleinEcranDisponible = Boolean(docRacine.fullscreenEnabled || docRacine.webkitFullscreenEnabled);
 
