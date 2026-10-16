@@ -17,6 +17,16 @@
   --largeur-scene: min(var(--largeur-dispo), var(--hauteur-dispo) * 16 / 9);
 }
 
+/* iPhone / iPad (seuls à reconnaître -webkit-touch-callout) : Chrome sur iOS ne donne pas la zone
+   de la barre d'accueil (elle vaut 0), on garde donc toujours au moins 20px libres en bas */
+@supports (-webkit-touch-callout: none) {
+  @media (pointer: coarse) {
+    :root {
+      --marge-bas: max(env(safe-area-inset-bottom, 0px), 20px);
+    }
+  }
+}
+
 /* Échelle de l'interface : 1px sur ordinateur, réduite quand la scène fait moins de 1280px
    de large (téléphone, petite fenêtre). Les tailles s'écrivent calc(N * var(--k)). */
 :root {
