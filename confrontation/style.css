@@ -1,0 +1,219 @@
+.scene {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: min(100vw, 100vh * 16 / 9);
+  overflow: hidden;
+  /* Les tailles en cqw suivent la largeur de la scène */
+  container-type: inline-size;
+  --clair: #d4d4d4;
+  --epaisseur: 0.25cqw;
+}
+
+.decor {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  --parallax: 16px;
+  transform: translate(calc(var(--mx, 0) * var(--parallax)), calc(var(--my, 0) * var(--parallax)))
+    scale(1.03);
+  will-change: transform;
+}
+
+/* ---------- Boîte de dialogue ---------- */
+
+/* La boîte est décalée vers la droite pour centrer l'ensemble avec le portrait qui dépasse */
+.dialogue {
+  position: absolute;
+  left: calc(50% + 4cqw);
+  bottom: 4%;
+  width: 50cqw;
+  height: 9cqw;
+  transform: translateX(-50%);
+  color: #fff;
+  font-family: 'Iceland', sans-serif;
+  --depart-x: -50%;
+  animation: apparition 0.5s ease-out 0.4s backwards;
+}
+
+.dialogue-boite {
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 4cqw 0 8.5cqw;
+  background: #232323;
+  border: var(--epaisseur) solid var(--clair);
+  border-radius: 0.6cqw;
+  cursor: pointer;
+  user-select: none;
+}
+
+.dialogue-texte {
+  font-size: 1.7cqw;
+  line-height: 1.25;
+}
+
+.dialogue-texte-reste {
+  visibility: hidden;
+}
+
+.dialogue-suivant {
+  position: absolute;
+  right: 1.4cqw;
+  bottom: 1.2cqw;
+  width: 0.7cqw;
+  fill: var(--clair);
+  shape-rendering: crispEdges;
+  animation: clignote 1s steps(1) infinite;
+}
+
+.dialogue.ecriture .dialogue-suivant,
+.dialogue.choix .dialogue-suivant {
+  visibility: hidden;
+}
+
+.dialogue-nom {
+  box-sizing: border-box;
+  position: absolute;
+  left: 6cqw;
+  bottom: calc(100% - var(--epaisseur));
+  min-width: 12cqw;
+  margin: 0;
+  padding: 0.4cqw 2cqw 0.3cqw 4cqw;
+  background: #1c1c1c;
+  border: var(--epaisseur) solid var(--clair);
+  border-bottom: none;
+  border-radius: 0 1cqw 0 0;
+  font-size: 1.8cqw;
+  line-height: 1;
+}
+
+/* Portrait en losange, posé à cheval sur le bord gauche de la boîte */
+.portrait {
+  position: absolute;
+  z-index: 1;
+  left: -8cqw;
+  bottom: -0.5cqw;
+  width: 16cqw;
+  aspect-ratio: 1;
+  background: var(--clair);
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+
+.portrait-cadre {
+  position: absolute;
+  inset: 0.5cqw;
+  overflow: hidden;
+  background: #111;
+  clip-path: inherit;
+}
+
+/* Agrandie pour masquer le fond noir autour du losange des images */
+.portrait-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scale(1.1);
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* ---------- Choix ---------- */
+
+.dialogue-choix {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 1.5cqw);
+  display: none;
+  flex-direction: column;
+  gap: 1cqw;
+}
+
+.dialogue.choix .dialogue-choix {
+  display: flex;
+}
+
+.dialogue-choix .bouton-coin {
+  font-size: 1.7cqw;
+  --depart-x: 0;
+  animation: apparition 0.3s ease-out backwards;
+}
+
+.dialogue-choix .bouton-coin + .bouton-coin {
+  animation-delay: 0.1s;
+}
+
+/* ---------- Fin ---------- */
+
+.fin {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.4s,
+    visibility 0.4s;
+}
+
+.fin.ouvert {
+  opacity: 1;
+  visibility: visible;
+}
+
+.fin-boite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  max-width: 440px;
+  padding: 22px 28px 26px;
+  background: rgba(10, 10, 12, 0.92);
+  outline: 4px solid #5c5c5c;
+  color: #fff;
+  font-family: 'Iceland', sans-serif;
+  text-align: center;
+}
+
+.fin-boite p {
+  margin: 0;
+}
+
+.fin-titre {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.fin-texte {
+  color: #ccc;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.fin-menu {
+  margin-top: 6px;
+  font-size: 24px;
+}
+
+/* Le décalage horizontal de départ garde le centrage de la boîte de dialogue */
+@keyframes apparition {
+  from {
+    opacity: 0;
+    transform: translate(var(--depart-x, 0), 10px);
+  }
+}
+
+@keyframes clignote {
+  50% {
+    opacity: 0;
+  }
+}

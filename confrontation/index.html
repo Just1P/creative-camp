@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Confrontation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Iceland&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../shared/base.css" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="scene">
+      <img class="decor" src="../assets/images/reflexion-bg.png" alt="" draggable="false" />
+
+      <div class="dialogue">
+        <div class="portrait">
+          <div class="portrait-cadre">
+            <img class="portrait-image" alt="" draggable="false" />
+          </div>
+        </div>
+        <p class="dialogue-nom"></p>
+        <div class="dialogue-boite">
+          <span class="dialogue-texte"></span>
+          <svg class="dialogue-suivant" viewBox="0 0 4 7" aria-hidden="true">
+            <path d="M0 0h1v1h1v1h1v1h1v1H3v1H2v1H1v1H0z" />
+          </svg>
+        </div>
+        <div class="dialogue-choix"></div>
+      </div>
+
+      <div class="fin" role="dialog" aria-label="Fin de la démo">
+        <div class="fin-boite">
+          <p class="fin-titre"></p>
+          <p class="fin-texte"></p>
+          <p class="fin-texte">Merci d’avoir joué ! À bientôt pour la suite de l’enquête.</p>
+          <button class="bouton-coin fin-menu" type="button">Menu principal</button>
+        </div>
+      </div>
+    </div>
+    <audio autoplay class="ambiance" src="../assets/musiques/rain-on-window.mp3" loop preload="auto"></audio>
+    <script src="../shared/base.js"></script>
+    <script src="dialogue.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
