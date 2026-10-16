@@ -4,10 +4,23 @@
   font-display: swap;
 }
 
-/* Échelle de l'interface : 1px sur ordinateur, réduite quand la scène 16:9 fait moins de 1280px
+/* Place disponible pour une scène : l'écran sans les zones réservées par le téléphone
+   (barre d'accueil de l'iPhone, encoche). Ces zones valent 0 sur ordinateur. */
+:root {
+  --marge-haut: env(safe-area-inset-top, 0px);
+  --marge-droite: env(safe-area-inset-right, 0px);
+  --marge-bas: env(safe-area-inset-bottom, 0px);
+  --marge-gauche: env(safe-area-inset-left, 0px);
+  --largeur-dispo: calc(100vw - var(--marge-gauche) - var(--marge-droite));
+  --hauteur-dispo: calc(100dvh - var(--marge-haut) - var(--marge-bas));
+  /* Largeur d'une scène 16:9 qui tient entière dans cette place */
+  --largeur-scene: min(var(--largeur-dispo), var(--hauteur-dispo) * 16 / 9);
+}
+
+/* Échelle de l'interface : 1px sur ordinateur, réduite quand la scène fait moins de 1280px
    de large (téléphone, petite fenêtre). Les tailles s'écrivent calc(N * var(--k)). */
 :root {
-  --k: min(1px, calc(min(100vw, 100vh * 16 / 9) / 1280));
+  --k: min(1px, calc(var(--largeur-scene) / 1280));
 }
 
 html,

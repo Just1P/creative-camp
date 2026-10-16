@@ -1,7 +1,13 @@
+/* La scène reste centrée dans la place disponible, au-dessus de la barre d'accueil de l'iPhone */
+body {
+  box-sizing: border-box;
+  padding: var(--marge-haut) var(--marge-droite) var(--marge-bas) var(--marge-gauche);
+}
+
 .scene {
   position: relative;
   aspect-ratio: 16 / 9;
-  width: min(100vw, 100vh * 16 / 9);
+  width: var(--largeur-scene);
   overflow: hidden;
   /* Les tailles en cqw suivent la largeur de la scène */
   container-type: inline-size;

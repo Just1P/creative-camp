@@ -217,8 +217,8 @@ h1.is-glitching::after {
 .menu {
   position: fixed;
   z-index: 101;
-  left: calc(80 * var(--k));
-  bottom: calc(70 * var(--k));
+  left: calc(80 * var(--k) + var(--marge-gauche));
+  bottom: calc(70 * var(--k) + var(--marge-bas));
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -385,12 +385,18 @@ h1.is-glitching::after {
 /* Scène de crime ouverte par-dessus le menu */
 .jeu {
   position: fixed;
-  inset: 0;
+  top: var(--marge-haut);
+  right: var(--marge-droite);
+  bottom: var(--marge-bas);
+  left: var(--marge-gauche);
   z-index: 1000;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - var(--marge-gauche) - var(--marge-droite));
+  height: calc(100% - var(--marge-haut) - var(--marge-bas));
   border: none;
   background: #000;
+  /* Le cadre s'arrête au-dessus de la barre d'accueil de l'iPhone (zones de l'écran que le
+     téléphone se réserve) : le noir autour cache le menu dans ces zones */
+  box-shadow: 0 0 0 100vmax #000;
 }
 
 /* Écran de chargement entre le menu et le jeu */
