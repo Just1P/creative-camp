@@ -39,6 +39,9 @@ body {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
+  /* iOS grossit les textes à l'horizontale : les tailles du jeu sont déjà calculées */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   margin: 0;
   padding: 0;
   height: 100%;

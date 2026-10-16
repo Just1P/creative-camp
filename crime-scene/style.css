@@ -505,6 +505,9 @@ body {
 /* Proportions calées sur screen.png (300 x 60) */
 .digicode-ecran {
   aspect-ratio: 5 / 1;
+  /* Garde les proportions de l'image même si le texte est plus grand que prévu */
+  min-height: 0;
+  overflow: hidden;
   margin: 0 9cqw 7.5cqw;
   display: grid;
   place-items: center;
