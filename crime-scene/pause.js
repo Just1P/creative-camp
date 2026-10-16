@@ -55,6 +55,7 @@ if (pleinEcranDisponible) {
   boutonPleinEcran.remove();
 }
 
+document.querySelector('.bouton-pause').addEventListener('click', ouvrirPause);
 pause.querySelector('.pause-reprendre').addEventListener('click', fermerPause);
 pause.querySelector('.pause-quitter').addEventListener('click', () => {
   // Ouverte depuis le menu : on referme simplement le cadre du jeu pour garder le plein écran

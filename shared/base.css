@@ -4,8 +4,18 @@
   font-display: swap;
 }
 
+/* Échelle de l'interface : 1px sur ordinateur, réduite quand la scène 16:9 fait moins de 1280px
+   de large (téléphone, petite fenêtre). Les tailles s'écrivent calc(N * var(--k)). */
+:root {
+  --k: min(1px, calc(min(100vw, 100vh * 16 / 9) / 1280));
+}
+
 html,
 body {
+  /* Pas de zoom au double toucher ni de surlignage gris au toucher sur mobile */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -21,19 +31,19 @@ body {
 /* Bouton à coin coupé, commun aux scènes du jeu */
 .bouton-coin {
   --couleur: rgb(236, 47, 91);
-  --coin: 14px;
-  --epaisseur: 4px;
+  --coin: calc(14 * var(--k));
+  --epaisseur: calc(4 * var(--k));
   position: relative;
   isolation: isolate;
   display: flex;
   align-items: center;
-  gap: 22px;
-  padding: 8px 30px 8px 18px;
+  gap: calc(22 * var(--k));
+  padding: calc(8 * var(--k)) calc(30 * var(--k)) calc(8 * var(--k)) calc(18 * var(--k));
   background: var(--couleur);
   border: none;
   color: #fff;
   font-family: 'Iceland', sans-serif;
-  font-size: 30px;
+  font-size: calc(30 * var(--k));
   line-height: 1;
   cursor: pointer;
   clip-path: polygon(
@@ -55,8 +65,8 @@ body {
   clip-path: polygon(
     0 0,
     100% 0,
-    100% calc(100% - var(--coin) + 2px),
-    calc(100% - var(--coin) + 2px) 100%,
+    100% calc(100% - var(--coin) + calc(2 * var(--k))),
+    calc(100% - var(--coin) + calc(2 * var(--k))) 100%,
     0 100%
   );
   transition: background-size 0.15s ease-out;
@@ -72,8 +82,55 @@ body {
 }
 
 .bouton-coin svg {
-  width: 12px;
-  height: 21px;
+  width: calc(12 * var(--k));
+  height: calc(21 * var(--k));
   fill: currentColor;
   shape-rendering: crispEdges;
+}
+
+/* Écran affiché sur un téléphone tenu à la verticale : le jeu se joue à l'horizontale */
+.tourner {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  place-content: center;
+  gap: 24px;
+  padding: 24px;
+  background: #000;
+  color: #fff;
+  font-family: 'Iceland', sans-serif;
+  font-size: 28px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.tourner p {
+  margin: 0;
+}
+
+.tourner svg {
+  justify-self: center;
+  width: 64px;
+  height: 64px;
+  fill: rgb(236, 47, 91);
+  shape-rendering: crispEdges;
+  animation: tourner 2s ease-in-out infinite;
+}
+
+@keyframes tourner {
+  0%,
+  20% {
+    transform: none;
+  }
+  50%,
+  70% {
+    transform: rotate(-90deg);
+  }
+}
+
+@media (orientation: portrait) and (pointer: coarse) {
+  .tourner {
+    display: grid;
+  }
 }

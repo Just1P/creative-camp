@@ -1,4 +1,5 @@
 .objectifs,
+.bouton-pause,
 .inventaire-message,
 .case,
 .inventaire-bouton,
@@ -20,7 +21,7 @@
 .decor {
   position: absolute;
   inset: 0;
-  --parallax: 16px;
+  --parallax: calc(16 * var(--k));
   transform: translate(calc(var(--mx, 0) * var(--parallax)), calc(var(--my, 0) * var(--parallax)))
     scale(1.03);
   will-change: transform;
@@ -71,20 +72,20 @@
   position: absolute;
   right: 1%;
   top: 4%;
-  width: 140px;
-  padding: 10px 14px 12px;
+  width: calc(140 * var(--k));
+  padding: calc(10 * var(--k)) calc(14 * var(--k)) calc(12 * var(--k));
   background: rgba(10, 10, 12, 0.85);
   box-shadow: var(--bordure-pixel);
   --bordure: #5c5c5c;
-  --epaisseur: 3px;
+  --epaisseur: calc(3 * var(--k));
   color: #fff;
   font-family: 'Iceland', sans-serif;
   pointer-events: none;
 }
 
 .objectifs-titre {
-  margin: 0 0 8px;
-  font-size: 28px;
+  margin: 0 0 calc(8 * var(--k));
+  font-size: calc(28 * var(--k));
   font-weight: normal;
   line-height: 1;
 }
@@ -92,12 +93,37 @@
 .objectifs-liste {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: calc(12 * var(--k));
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: 20px;
+  font-size: calc(20 * var(--k));
   line-height: 1.1;
+}
+
+/* Bouton pause : seulement sur écran tactile, où il n'y a pas de touche Échap */
+.bouton-pause {
+  position: absolute;
+  left: 1%;
+  top: 4%;
+  z-index: 1;
+  display: none;
+  place-items: center;
+  width: calc(56 * var(--k));
+  aspect-ratio: 1;
+  padding: 0;
+  background: rgba(10, 10, 12, 0.85);
+  box-shadow: var(--bordure-pixel);
+  --bordure: #5c5c5c;
+  --epaisseur: calc(3 * var(--k));
+  border: none;
+  color: #fff;
+}
+
+.bouton-pause svg {
+  width: 40%;
+  fill: currentColor;
+  shape-rendering: crispEdges;
 }
 
 /* Nom au-dessus du compteur */
@@ -108,7 +134,7 @@
 
 .objectif-compte {
   color: #aaa;
-  font-size: 28px;
+  font-size: calc(28 * var(--k));
 }
 
 .objectif.termine .objectif-compte {
@@ -118,13 +144,13 @@
 .inventaire {
   position: absolute;
   left: 50%;
-  bottom: 30px;
+  bottom: calc(30 * var(--k));
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
+  gap: calc(20 * var(--k));
   /* Fermé : seul le bouton dépasse, à 20px du bas */
-  transform: translate(-50%, calc(100% - 10px));
+  transform: translate(-50%, calc(100% - calc(10 * var(--k))));
   transition: transform 0.4s ease;
   pointer-events: none;
 }
@@ -137,14 +163,14 @@
 
 .inventaire-message {
   margin: 0;
-  padding: 6px 12px;
+  padding: calc(6 * var(--k)) calc(12 * var(--k));
   background: #222;
   box-shadow: var(--bordure-pixel);
   --bordure: #515151e5;
-  --epaisseur: 3px;
+  --epaisseur: calc(3 * var(--k));
   color: #fff;
   font-family: 'Iceland', sans-serif;
-  font-size: 26px;
+  font-size: calc(26 * var(--k));
   white-space: nowrap;
 }
 
@@ -153,16 +179,16 @@
 }
 
 .inventaire-bouton {
-  width: 48px;
-  height: 28px;
+  width: calc(48 * var(--k));
+  height: calc(28 * var(--k));
   display: grid;
   place-items: center;
   padding: 0;
   background: #222;
   box-shadow: var(--bordure-pixel);
   --bordure: #5c5c5c;
-  --epaisseur: 3px;
-  margin-bottom: 10px;
+  --epaisseur: calc(3 * var(--k));
+  margin-bottom: calc(10 * var(--k));
   border: none;
   color: #fff;
   cursor: pointer;
@@ -186,8 +212,8 @@
 }
 
 .inventaire-bouton svg {
-  width: 16px;
-  height: 10px;
+  width: calc(16 * var(--k));
+  height: calc(10 * var(--k));
   fill: currentColor;
   shape-rendering: crispEdges;
 }
@@ -202,7 +228,7 @@
 
 .inventaire-cases {
   display: flex;
-  gap: 20px;
+  gap: calc(20 * var(--k));
 }
 
 .inventaire.sans-cases .inventaire-cases {
@@ -211,19 +237,20 @@
 
 .case {
   box-sizing: border-box;
-  width: 90px;
+  width: calc(90 * var(--k));
   aspect-ratio: 1;
   display: grid;
   place-items: center;
   background: #222;
   box-shadow: var(--bordure-pixel);
   --bordure: #5c5c5c;
-  --epaisseur: 4px;
+  --epaisseur: calc(4 * var(--k));
   position: relative;
   transition: box-shadow 0.3s;
 }
 
 .case.nouvelle,
+.case.montre,
 .case:has(.fiche):hover {
   --bordure: rgb(236, 47, 91);
 }
@@ -241,7 +268,7 @@
 .case > span {
   color: #fff;
   font-family: 'Iceland', sans-serif;
-  font-size: 18px;
+  font-size: calc(18 * var(--k));
   text-align: center;
 }
 
@@ -250,33 +277,34 @@
 .fiche {
   position: absolute;
   left: 50%;
-  bottom: calc(100% + 18px);
+  bottom: calc(100% + calc(18 * var(--k)));
   z-index: 1;
   box-sizing: border-box;
-  width: 260px;
+  width: calc(260 * var(--k));
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 12px 14px 14px;
+  gap: calc(10 * var(--k));
+  padding: calc(12 * var(--k)) calc(14 * var(--k)) calc(14 * var(--k));
   background: rgba(10, 10, 12, 0.92);
   box-shadow: var(--bordure-pixel);
   --bordure: #5c5c5c;
-  --epaisseur: 4px;
+  --epaisseur: calc(4 * var(--k));
   color: #fff;
   font-family: 'Iceland', sans-serif;
   text-align: center;
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transform: translate(-50%, 6px);
+  transform: translate(-50%, calc(6 * var(--k)));
   transition:
     opacity 0.2s,
     transform 0.2s,
     visibility 0.2s;
 }
 
-.case:hover .fiche {
+.case:hover .fiche,
+.case.montre .fiche {
   opacity: 1;
   visibility: visible;
   transform: translate(-50%, 0);
@@ -287,18 +315,18 @@
 }
 
 .fiche-nom {
-  font-size: 30px;
+  font-size: calc(30 * var(--k));
   line-height: 1;
 }
 
 .fiche-texte {
-  padding: 6px 10px;
+  padding: calc(6 * var(--k)) calc(10 * var(--k));
   background: #fff;
   box-shadow: var(--bordure-pixel);
   --bordure: #fff;
-  --epaisseur: 3px;
+  --epaisseur: calc(3 * var(--k));
   color: #111;
-  font-size: 15px;
+  font-size: calc(15 * var(--k));
   line-height: 1.2;
 }
 
@@ -322,7 +350,7 @@
   z-index: 1;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(10px);
+  transform: translateY(calc(10 * var(--k)));
   transition:
     opacity 0.3s,
     transform 0.3s,
@@ -361,13 +389,13 @@
   display: none;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  max-width: 420px;
-  padding: 22px 28px 26px;
+  gap: calc(16 * var(--k));
+  max-width: calc(420 * var(--k));
+  padding: calc(22 * var(--k)) calc(28 * var(--k)) calc(26 * var(--k));
   background: rgba(10, 10, 12, 0.92);
   box-shadow: var(--bordure-pixel);
   --bordure: #5c5c5c;
-  --epaisseur: 4px;
+  --epaisseur: calc(4 * var(--k));
   color: #fff;
   font-family: 'Iceland', sans-serif;
   text-align: center;
@@ -383,24 +411,24 @@
 }
 
 .fin-titre {
-  font-size: 40px;
+  font-size: calc(40 * var(--k));
   line-height: 1;
 }
 
 .fin-texte {
   color: #ccc;
-  font-size: 22px;
+  font-size: calc(22 * var(--k));
   line-height: 1.2;
 }
 
 .fin-actions {
   display: flex;
-  gap: 16px;
-  margin-top: 6px;
+  gap: calc(16 * var(--k));
+  margin-top: calc(6 * var(--k));
 }
 
 .fin-actions .bouton-coin {
-  font-size: 24px;
+  font-size: calc(24 * var(--k));
 }
 
 /* ---------- Pause ---------- */
@@ -411,20 +439,20 @@
 
 .pause .pause-boite {
   display: flex;
-  gap: 22px;
-  min-width: 280px;
+  gap: calc(22 * var(--k));
+  min-width: calc(280 * var(--k));
 }
 
 .pause-actions {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 14px;
+  gap: calc(14 * var(--k));
   width: 100%;
 }
 
 .pause-actions .bouton-coin {
-  font-size: 26px;
+  font-size: calc(26 * var(--k));
 }
 
 /* ---------- Digicode ---------- */
@@ -460,7 +488,7 @@
   container-type: inline-size;
   image-rendering: pixelated;
   position: relative;
-  transform: translateY(20px);
+  transform: translateY(calc(20 * var(--k)));
   transition: transform 0.25s ease-out;
 }
 
@@ -536,7 +564,7 @@
 }
 
 .digicode-touche:focus-visible {
-  outline: 3px solid rgb(236, 47, 91);
+  outline: calc(3 * var(--k)) solid rgb(236, 47, 91);
 }
 
 /* Papier du code posé à droite du boîtier, si l'indice a été récupéré */
@@ -612,4 +640,18 @@
 
 .zoom-objet img {
   image-rendering: pixelated;
+}
+
+/* ---------- Écran tactile ---------- */
+
+/* Bouton pause visible, bouton de l'inventaire plus facile à toucher */
+@media (pointer: coarse) {
+  .bouton-pause {
+    display: grid;
+  }
+
+  .inventaire-bouton {
+    width: calc(80 * var(--k));
+    height: calc(44 * var(--k));
+  }
 }

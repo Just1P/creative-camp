@@ -130,6 +130,7 @@ let targetX = 0,
   currentY = 0;
 
 document.addEventListener('mousemove', (e) => {
+  if (ecranTactile) return;
   targetX = -(e.clientX / window.innerWidth - 0.5) * 2;
   targetY = -(e.clientY / window.innerHeight - 0.5) * 2;
 });

@@ -21,6 +21,22 @@ if (pageRacine !== window) {
   document.addEventListener('DOMContentLoaded', () => pageRacine.jeuPret?.());
 }
 const docRacine = pageRacine.document;
+
+// ---------- Mobile ----------
+
+// Écran tactile : pas de souris, donc ni survol ni parallaxe
+const ecranTactile = matchMedia('(pointer: coarse)').matches;
+
+// Message « tournez votre téléphone », affiché en CSS quand l'écran est à la verticale.
+// Seulement sur la page racine : il couvre déjà la scène ouverte dans le cadre du jeu.
+if (pageRacine === window) {
+  const tourner = document.createElement('div');
+  tourner.className = 'tourner';
+  tourner.innerHTML =
+    '<svg viewBox="0 0 7 11" aria-hidden="true"><path fill-rule="evenodd" d="M0 0h7v11H0zM1 1v7h5V1zM3 9h1v1H3z" /></svg>' +
+    '<p>Tournez votre téléphone pour jouer</p>';
+  document.body.append(tourner);
+}
 const pleinEcranDisponible = Boolean(docRacine.fullscreenEnabled || docRacine.webkitFullscreenEnabled);
 
 function estPleinEcran() {

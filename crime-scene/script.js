@@ -115,11 +115,13 @@ function ouvrirInventaire(message, avecCases) {
 function fermerInventaire() {
   fermetureEnAttente = false;
   inventaire.classList.remove('ouvert', 'manuel', 'recuperation');
+  cases.forEach((c) => c.classList.remove('montre'));
 }
 
-// Fermeture automatique repoussée tant que la souris est sur les cases
+// Fermeture automatique repoussée tant que la souris est sur les cases (ou qu'une fiche est ouverte au toucher)
 function fermerInventaireAuto() {
-  if (!inventaire.classList.contains('sans-cases') && zoneCases.matches(':hover')) {
+  const consultee = zoneCases.matches(':hover') || zoneCases.querySelector('.montre');
+  if (!inventaire.classList.contains('sans-cases') && consultee) {
     fermetureEnAttente = true;
     return;
   }
@@ -154,10 +156,22 @@ boutonInventaire.addEventListener('click', () => {
 });
 
 document.addEventListener('click', (e) => {
-  if (!inventaire.classList.contains('manuel')) return;
+  if (!inventaire.classList.contains('manuel') && !fermetureEnAttente) return;
   if (e.target.closest('.inventaire')) return;
   fermerInventaire();
 });
+
+// Écran tactile : pas de survol, un toucher sur un objet ouvre ou ferme sa fiche
+if (ecranTactile) {
+  cases.forEach((caseObjet) =>
+    caseObjet.addEventListener('click', () => {
+      if (!caseObjet.querySelector('.fiche')) return;
+      const montre = !caseObjet.classList.contains('montre');
+      cases.forEach((c) => c.classList.toggle('montre', c === caseObjet && montre));
+      if (!montre && fermetureEnAttente) fermerInventaire();
+    }),
+  );
+}
 
 // Encart affiché au survol d'un objet de l'inventaire
 function creerFiche(zone) {
@@ -315,9 +329,9 @@ let cibleX = 0,
   actuelX = 0,
   actuelY = 0;
 
-// Le décor reste figé pendant la pause
+// Le décor reste figé pendant la pause, et sur écran tactile (pas de souris à suivre)
 document.addEventListener('mousemove', (e) => {
-  if (pause.classList.contains('ouvert')) return;
+  if (ecranTactile || pause.classList.contains('ouvert')) return;
   cibleX = -(e.clientX / window.innerWidth - 0.5) * 2;
   cibleY = -(e.clientY / window.innerHeight - 0.5) * 2;
 });
