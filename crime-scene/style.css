@@ -177,7 +177,11 @@ body {
   color: #fff;
   font-family: 'Iceland', sans-serif;
   font-size: calc(26 * var(--k));
-  white-space: nowrap;
+  /* Une seule ligne si possible, retour à la ligne au-delà de 80 % de la scène */
+  box-sizing: border-box;
+  width: max-content;
+  max-width: calc(var(--largeur-scene) * 0.8);
+  text-align: center;
 }
 
 .inventaire.sans-message .inventaire-message {
